@@ -221,7 +221,7 @@ function buyNewProgram(cheat = "no") {
     }
     document.getElementById("programNow").innerHTML = programNames[prog];
     document.getElementById("programIcon").src =
-      "ressources/icons/programs/" + programNames[prog] + ".png";
+      "ressources/clickerGame/icons/programs/" + programNames[prog] + ".png";
     Tooltip("programIcon");
   } else {
     error();
@@ -245,7 +245,7 @@ function buyNewManager(cheat = "no") {
     }
     document.getElementById("managerNow").innerHTML = managerNames[mana];
     document.getElementById("managerIcon").src =
-      "ressources/icons/manager/" + managerNames[mana] + ".png";
+      "ressources/clickerGame/icons/manager/" + managerNames[mana] + ".png";
     Tooltip("managerIcon");
   } else {
     error();
@@ -269,7 +269,7 @@ function buyNewWorkerLevel(cheat = "no") {
     }
     document.getElementById("workerNow").innerHTML = workerLevels[work];
     document.getElementById("workerIcon").src =
-      "ressources/icons/workers/" + workerLevels[work] + ".png";
+      "ressources/clickerGame/icons/workers/" + workerLevels[work] + ".png";
     Tooltip("workerIcon");
   } else {
     error();
@@ -296,7 +296,7 @@ function buyNewComputer(cheat = "no") {
     }
     document.getElementById("computerNow").innerHTML = computerNames[comp];
     document.getElementById("computerIcon").src =
-      "ressources/icons/computer/" + computerNames[comp] + ".png";
+      "ressources/clickerGame/icons/computer/" + computerNames[comp] + ".png";
     Tooltip("computerIcon");
   } else {
     error();
@@ -412,7 +412,7 @@ function reloadIconsAndText() {
   }
   document.getElementById("programNow").innerHTML = programNames[prog];
   document.getElementById("programIcon").src =
-    "ressources/icons/programs/" + programNames[prog] + ".png";
+    "ressources/clickerGame/icons/programs/" + programNames[prog] + ".png";
 
   if (mana < managerNames.length - 1) {
     manaUpCo.innerHTML = prices[1][mana];
@@ -421,7 +421,7 @@ function reloadIconsAndText() {
   }
   document.getElementById("managerNow").innerHTML = managerNames[mana];
   document.getElementById("managerIcon").src =
-    "ressources/icons/manager/" + managerNames[mana] + ".png";
+    "ressources/clickerGame/icons/manager/" + managerNames[mana] + ".png";
 
   if (work < workerLevels.length - 1) {
     workUpCo.innerHTML = prices[2][work];
@@ -430,7 +430,7 @@ function reloadIconsAndText() {
   }
   document.getElementById("workerNow").innerHTML = workerLevels[work];
   document.getElementById("workerIcon").src =
-    "ressources/icons/workers/" + workerLevels[work] + ".png";
+    "ressources/clickerGame/icons/workers/" + workerLevels[work] + ".png";
 
   if (comp < computerNames.length - 1) {
     compUpCo.innerHTML = prices[3][comp];
@@ -439,7 +439,7 @@ function reloadIconsAndText() {
   }
   document.getElementById("computerNow").innerHTML = computerNames[comp];
   document.getElementById("computerIcon").src =
-    "ressources/icons/computer/" + computerNames[comp] + ".png";
+    "ressources/clickerGame/icons/computer/" + computerNames[comp] + ".png";
 
   cpnyUpCo.innerHTML = prices[4][0];
 
