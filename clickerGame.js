@@ -96,11 +96,11 @@ function closeSettings() {
 var darkMode = false;
 function changeStyle() {
   if (darkMode) {
-    document.getElementById("styleLink").href = "style-light.css";
+    document.getElementById("styleLink").href = "clicker style-light.css";
     document.getElementById("changeStyleButton").firstElementChild.innerHTML = "Change Theme<br>(Light Mode 🠖 Dark Mode)";
     darkMode = false;
   } else {
-    document.getElementById("styleLink").href = "style-dark.css";
+    document.getElementById("styleLink").href = "clicker style-dark.css";
     document.getElementById("changeStyleButton").firstElementChild.innerHTML = "Change Theme<br>(Dark Mode 🠖 Light Mode)";
 
     darkMode = true;
