@@ -1,0 +1,15 @@
+.button {
+  box-shadow: 3px 3px 2px gray;
+}
+
+#p1 {
+  user-select: none;
+}
+
+#p2 {
+  user-select: none;
+}
+
+#p3 {
+  user-select: none;
+}

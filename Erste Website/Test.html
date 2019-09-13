@@ -1,0 +1,97 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>
+    Helo
+  </title>
+
+  <link rel="stylesheet" href="Test.css">
+</head>
+
+<body>
+  <p>Helo ma bois! So funktioniert Google Chrome:</p>
+
+  <table style="width: 80%;">
+    <tr>
+      <td>
+        <a href="https://www.Google.de/">
+          <img alt="Hier soll eigentlich so ein Bild sain!" src="Ressources\pictures\chrome.gif">
+        </a>
+      </td>
+
+      <td style="width: 50%;">
+        <!-- Rechte Seite der Website -->
+        <table>
+          <tr>
+            <td>
+              <!--Oben links-->
+              <p><span onmouseover="up(this)" onmouseout="down(this)">Wähle </span><span onmouseover="up(this)"
+                  onmouseout="down(this)">hier </span><span onmouseover="up(this)" onmouseout="down(this)">das
+                </span><span onmouseover="up(this)" onmouseout="down(this)">zu </span><span onmouseover="up(this)"
+                  onmouseout="down(this)">spielende </span>
+                <span onmouseover="up(this)" onmouseout="down(this)">Lied </span><span onmouseover="up(this)"
+                  onmouseout="down(this)">aus: </span></p>
+            </td>
+            <td>
+              <!--Oben rechts-->
+              <div>
+                <select onchange="updateMusic()" id="sel">
+                  <option value="babawagen.mp3">Babawagen</option>
+                  <option value="crabRave.mp3">Crab Rave</option>
+                  <option value="takeOnMe.mp3">Take on me (Shittyfluted)</option>
+                  <option value="theFlute.mp3">The Flute (Soulpride Remix)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <audio id="music" src="Ressources/songs/babawagen.mp3" controls loop autoplay> </audio>
+            </td>
+            <td>
+              <!--Unten rechts-->
+            </td>
+          </tr>
+        </table>
+        <br />
+        <br />
+        <br />
+        <form action="PointerPointer.html" align="center">
+          <input type="submit" value="Zur PointerPointer-Website" class="button" />
+        </form>
+      </td>
+
+    </tr>
+  </table>
+
+  <br>
+
+  <hr>
+  Und hier einfach noch ein paar random Zahlen zwischen 0 und 1 lol:
+  <p id="p1" onclick="number(this)">1</p>
+  <p id="p2" onclick="number(this)">2</p>
+  <p id="p3" onclick="number(this)">3</p>
+  <script type="text/javascript" src="Test.js">
+  </script>
+
+  <hr>
+
+  <svg width="70%" height="400" align="center">
+    <circle cx="70%" cy="200" r="100" stroke="black" id="Kreis" onmouseover="randomColors()" onmouseout="back()"
+      align="center">
+    </circle>
+  </svg>
+  <br />
+
+  <div align="center">
+    <button onclick="start()"> Start the Rainbow </button>
+    <button onclick="stop()"> Stop the Rainbow </button>
+  </div>
+
+
+</body>
+
+
+</html>

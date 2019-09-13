@@ -1,0 +1,15 @@
+.button {
+  box-shadow: 3px 3px 2px gray;
+}
+
+img {
+  position: absolute;
+  left: 5px;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
