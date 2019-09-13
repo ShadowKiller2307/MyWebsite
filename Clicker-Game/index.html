@@ -1,0 +1,144 @@
+<html>
+
+<head>
+  <title>
+    Clicker Game by Felix
+  </title>
+  <link rel="stylesheet" href="style-general.css" />
+  <link id="styleLink" rel="stylesheet" href="style-light.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+</head>
+
+<body id="body">
+  <p class="heading">
+    Clicker Game
+  </p>
+
+  <div class="statsContainer">
+    <table border="2px" width=100%>
+      <tr width="100%">
+        <td width="33%" id="stat1">
+          <p>Money: <span id="moneyCounter">0</span></p>
+        </td>
+        <td width="33%" id="stat2">
+          <p>Lines of Code: <span id="linesOfCodeCounter">0</span></p>
+        </td>
+        <td width="33%" id="stat3">
+          <p>Workers: <span id="workersCounter">0</span></p>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="upgradeContainer">
+    <div class="upgrade">
+      <p id="programNow">
+        TextEditor
+      </p>
+      <img src="ressources\icons\programs\TextEditor.png" alt="Image can not be shown!" onmouseup="buyNewProgram()"
+        onmouseover="mouseEntered(this.id)" onmouseout="mouseLeft()" id="programIcon" />
+      <p id="programUpgradeCost">Upgrade Cost: <span></span> Money</p>
+    </div>
+    <div class="upgrade">
+      <p id="managerNow">
+        No Manager
+      </p>
+      <img src="ressources\icons\manager\No Manager.png" alt="Image can not be shown!" onmouseup="buyNewManager()"
+        onmouseover="mouseEntered(this.id)" onmouseout="mouseLeft()" id="managerIcon" />
+      <p id="managerUpgradeCost">Upgrade Cost: <span></span> Money</p>
+    </div>
+    <div class="upgrade">
+      <p id="workerNow">
+        Primary School Pupil
+      </p>
+      <img src="ressources\icons\workers\Primary School Pupil.png" alt="Image can not be shown!"
+        onmouseup="buyNewWorkerLevel()" onmouseover="mouseEntered(this.id)" onmouseout="mouseLeft()" id="workerIcon" />
+      <p id="workerUpgradeCost">Upgrade Cost: <span></span> Money</p>
+    </div>
+    <div class="upgrade">
+      <p id="computerNow">
+        MacBook
+      </p>
+      <img src="ressources\icons\computer\MacBook.png" alt="Image can not be shown!" onmouseup="buyNewComputer()"
+        onmouseover="mouseEntered(this.id)" onmouseout="mouseLeft()" id="computerIcon" />
+      <p id="computerUpgradeCost">Upgrade Cost: <span>lel</span> Money</p>
+    </div>
+    <div class="upgrade" id="left">
+      <p id="companyNow">
+        No company
+      </p>
+      <img src="ressources\icons\company\Company.png" alt="Image can not be shown!" onmouseup="upgradeCompany()"
+        onmouseover="mouseEntered(this.id)" onmouseout="mouseLeft()" id="companyIcon" />
+      <p id="companyUpgradeCost">Upgrade Cost: <span></span> Money</p>
+    </div>
+    <div class="placeholder">
+      <!-- Placeholder -->
+    </div>
+    <div class="placeholder">
+      <!-- Placeholder -->
+    </div>
+    <div class="upgrade" id="right">
+      <p>
+        <strong>Settings</strong>
+      </p>
+      <img src="ressources\icons\buttons\settings.png" alt="Image can not be shown!" onmouseup="openSettings()"
+        width="32px" height="32px" id="openSettingsButton" />
+      <p id="computerUpgradeCost">
+      </p>
+    </div>
+  </div>
+
+  <div class="allButtonsContainer">
+    <div class="writeCodeButtonContainer">
+      <div class="writeCodeButton" onmouseup="writeCode()">
+        <img src="ressources\icons\buttons\writeCodeButton.png" alt="Image can not be shown!" />
+      </div>
+    </div>
+    <div class="sellButtonContainer">
+      <div class="sellButton" onmouseup="sellCode()">
+        <img src="ressources\icons\buttons\sellButton.png" alt="Image can not be shown!" />
+      </div>
+    </div>
+    <div class="hireWorkerButtonContainer">
+      <div class="hireWorkerButton" onmouseup="hireWorker()">
+        <img src="ressources\icons\buttons\hireWorkerButton.png" alt="Image can not be shown!" />
+      </div>
+    </div>
+  </div>
+
+  <div id="settings">
+    <div id=styleButtonContainer>
+      <div id="styleButton">
+        <div id="changeStyleButton" class="settingsButton" onmouseup="changeStyle()">
+          <p>Change Theme<br>(Light Mode 🠖 Dark Mode)</p>
+        </div>
+      </div>
+    </div>
+    <div id="saveLoadContainer">
+      <div id="saveGameButton" class="settingsButton" onmouseup="saveGame()">
+        <p>Save Gamestate<br>(Downloads .txt File)</p>
+      </div>
+      <div class="placeholder">
+        <!-- Placeholder -->
+      </div>
+      <div id="loadGameButton" class="settingsButton" onmouseup="loadGame()">
+        <p>Load Gamestate<br>(Drag & drop File here)</p>
+      </div>
+    </div>
+    <div id="closeSettingsButton" class="settingsButton" onmouseup="closeSettings()">
+      <img src="ressources\icons\buttons\closeSettingsButton.png" alt="Image can not be shown!" width="32px"
+        height="32px">
+    </div>
+  </div>
+
+  <div id="tooltip">
+    <p></p>
+  </div>
+
+  <div id="error"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+  <script type="text/JavaScript" defer src="code.js"></script>
+</body>
+
+</html>

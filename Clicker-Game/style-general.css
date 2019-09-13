@@ -1,0 +1,323 @@
+body {
+  margin: 0;
+  user-select: none;
+  overflow: hidden;
+  position: absolute;
+  padding-top: 10px;
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  height: 100%;
+}
+
+.heading {
+  font-family: HeadingForTheClickergame;
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+#error {
+  animation-name: error;
+  animation-duration: 0.5s;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  display: none;
+  pointer-events: none;
+  color: rgb(231, 62, 56);
+  color: red;
+}
+
+#tooltip p{
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#tooltip{
+  position: absolute;
+  animation-name: tooltipPulse;
+  animation-direction: alternate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  top: 0px;
+  border-radius: 10px;
+}
+
+#closeSettingsButton{
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  background-color: rgb(177, 192, 191);
+  border-radius: 30%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.settingsButton{
+  transform: scale(1.0);
+}
+
+.settingsButton:hover{
+  transform: scale(1.1);
+}
+
+#changeStyleButton{
+  width: 220px;
+  height: 60px;
+  border-radius: 20px;
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  transition: transform 0.2s ease-in-out;
+}
+
+#styleButtonContainer{
+  position: absolute;
+  bottom: 150px;
+  text-align: center;
+  width: 100%;
+}
+
+#loadGameButton{
+  width: 200px;
+  height: 60px;
+  border-radius: 20px;
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  transition: transform 0.2s ease-in-out;
+}
+
+#saveGameButton{
+  width: 200px;
+  height: 60px;
+  border-radius: 20px;
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  transition: transform 0.2s ease-in-out;
+}
+
+#saveLoadContainer{
+  position: absolute;
+  bottom: 40px;
+  text-align: center;
+  width: 100%;
+}
+
+#settings{
+  position: absolute;
+  width: 97%;
+  height: 90%;
+  background-color: rgb(203, 221, 230);
+  top: 1.5%;
+  left: 1.5%;
+  display: none;
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.616);
+  border-radius: 35px;
+  transform: scale(1.0);
+  transition: transform 3s linear;
+}
+
+.writeCodeButton{
+  width: 329px;
+  height: 83px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.writeCodeButton:active{
+  width: 329px;
+  height: 83px;
+  -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+.writeCodeButton img {
+  width: 329px;
+  height: 83px;
+  display: inline-block;
+  z-index: -1;
+  position: relative;
+  border-radius: inherit;
+}
+
+.writeCodeButtonContainer {
+  margin-top: 35px;
+  width: 100%;
+  text-align: center;
+}
+
+.sellButton {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.sellButton:active{
+  width: 100px;
+  height: 100px;
+  -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+.sellButton img{
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  z-index: -1;
+  position: relative;
+  border-radius: inherit;
+}
+
+.sellButtonContainer {
+  margin-top: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+.hireWorkerButton {
+  width: 353px;
+  height: 99px;
+  display: inline-block;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  
+}
+
+.hireWorkerButton:active {
+  width: 353px;
+  height: 99px;
+  display: inline-block;
+  -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+.hireWorkerButton img{
+  width: 353px;
+  height: 99px;
+  display: inline-block;
+  z-index: -1;
+  position: relative;
+  border-radius: inherit;
+}
+
+.hireWorkerButtonContainer {
+  margin-top: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+.statsContainer {
+  margin-top: 20px;
+  margin-left: 5%;
+  display: inline-block;
+  width: 90%
+}
+
+.upgrade {
+  margin-top: 40px;
+  margin-right: -4px;
+  width: 25%;
+  display: inline-block;
+  text-align: center;
+  background-color: #ffffff;
+  -webkit-transition: background-color 0.3s linear;
+  -moz-transition: background-color 0.3s linear;
+  -o-transition: background-color 0.3s linear;
+  -ms-transition: background-color 0.3s linear;
+  transition: background-color 0.3s linear;
+}
+
+.upgrade:hover {
+  background-color: #dadada;
+}
+
+.upgrade img{
+  width: 37px;
+  height: 37px;
+}
+
+.upgradeContainer{
+  margin-left: 5%;
+  display: inline-block;
+  width: 90%
+}
+
+.placeholder {
+  margin-top: 0px;
+  margin-right: -4px;
+  width: 25%;
+  height: 0px;
+  display: inline-block;
+  pointer-events: none;
+}
+
+.allButtonsContainer {
+  margin: auto;
+  width: 50%;
+  position: relative;
+  top: -170px;
+}
+
+p{
+  margin-block-start: 10px;
+  margin-block-end: 10px;
+  margin-inline-end: 10px;
+  margin-inline-start: 10px;
+}
+
+*{
+  -webkit-user-drag: none;
+  -moz-window-dragging: none;
+}
+
+@keyframes error {
+  0% {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  50% {
+    background-color: rgba(223, 43, 43, 0.534);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes tooltipPulse{
+  0%{
+    background-color: rgba(105, 105, 105, 0.95);
+  }
+  
+  100%{
+  background-color: rgba(77, 77, 77, 0.95);
+  }
+}
+
+@font-face {
+  font-family: "HeadingForTheClickergame";
+  src: url("MagmaWave Caps.otf") format("embedded-opentype"),
+  url("MagmaWave Caps.otf") format("woff2"),
+  url("MagmaWave Caps.otf") format("woff"),
+  url("MagmaWave Caps.otf") format("truetype"),
+  url("MagmaWave Caps.otf") format("svg");
+}

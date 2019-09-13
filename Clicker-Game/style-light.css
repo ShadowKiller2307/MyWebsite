@@ -1,0 +1,45 @@
+body {
+  background-color: rgb(255, 255, 255);
+}
+
+#tooltip{
+  border: rgba(223, 43, 43, 0.534);
+}
+
+#closeSettingsButton{
+  background-color: rgb(177, 192, 191);
+}
+
+#changeStyleButton{
+  background-color: rgb(152, 164, 170);
+}
+
+#loadGameButton{
+  background-color: rgb(152, 164, 170);
+}
+
+#saveGameButton{
+  background-color: rgb(152, 164, 170);
+}
+
+.upgrade {
+  background-color: #ffffff;
+}
+
+.upgrade:hover {
+  background-color: #dadada;
+}
+
+p{
+  color: #000000;
+}
+
+@keyframes tooltipPulse{
+  0%{
+    background-color: rgba(105, 105, 105, 0.95);
+  }
+  
+  100%{
+  background-color: rgba(77, 77, 77, 0.95);
+  }
+}
