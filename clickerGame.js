@@ -105,7 +105,7 @@ window.onload = function () {
 
   computerNames.forEach(element => {
     let img = new Image();
-    img.src = "ressources/clickerGame/icons/computers/" + element + ".png";
+    img.src = "ressources/clickerGame/icons/computer/" + element + ".png";
     loadedImages.push(img);
   });
 };
