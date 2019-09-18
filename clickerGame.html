@@ -107,13 +107,6 @@
   </div>
 
   <div id="settings">
-    <div id=styleButtonContainer>
-      <div id="styleButton">
-        <div id="changeStyleButton" class="settingsButton" onmouseup="changeStyle()">
-          <p>Change Theme<br>(Light Mode 🠖 Dark Mode)</p>
-        </div>
-      </div>
-    </div>
     <div id="saveLoadContainer">
       <div id="saveGameButton" class="settingsButton" onmouseup="saveGame()">
         <p>Save Gamestate<br>(Downloads .txt File)</p>
@@ -123,6 +116,24 @@
       </div>
       <div id="loadGameButton" class="settingsButton" onmouseup="loadGame()">
         <p>Load Gamestate<br>(Drag & drop File here)</p>
+      </div>
+      <br>
+      <br>
+      <div id="saveGameButton" class="settingsButton" onmouseup="saveGame()">
+        <p>Save Gamestate<br>(Downloads .txt File)</p>
+      </div>
+      <div class="placeholder">
+        <!-- Placeholder -->
+      </div>
+      <div id="loadGameButton" class="settingsButton" onmouseup="loadGame()">
+        <p>Load Gamestate<br>(Drag & drop File here)</p>
+      </div>
+    </div>
+    <div id=styleButtonContainer>
+      <div id="styleButton">
+        <div id="changeStyleButton" class="settingsButton" onmouseup="changeStyle()">
+          <p>Change Theme<br>(Light Mode 🠖 Dark Mode)</p>
+        </div>
       </div>
     </div>
     <div id="closeSettingsButton" class="settingsButton" onmouseup="closeSettings()">

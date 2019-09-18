@@ -75,12 +75,39 @@ document.onmousemove = function moveTooltip(event) {
   document.getElementById("tooltip").style.top = event.clientY + 10;
 }
 
+var loadedImages = [];
+
 window.onload = function () {
   progUpCo.innerHTML = prices[0][prog];
   manaUpCo.innerHTML = prices[1][mana];
   workUpCo.innerHTML = prices[2][work];
   compUpCo.innerHTML = prices[3][comp];
   cpnyUpCo.innerHTML = prices[4][0];
+
+  //preload images
+  programNames.forEach(element => {
+    let img = new Image();
+    img.src = "ressources/clickerGame/icons/programs/" + element + ".png";
+    loadedImages.push(img);
+  });
+
+  managerNames.forEach(element => {
+    let img = new Image();
+    img.src = "ressources/clickerGame/icons/manager/" + element + ".png";
+    loadedImages.push(img);
+  });
+
+  workerLevels.forEach(element => {
+    let img = new Image();
+    img.src = "ressources/clickerGame/icons/workers/" + element + ".png";
+    loadedImages.push(img);
+  });
+
+  computerNames.forEach(element => {
+    let img = new Image();
+    img.src = "ressources/clickerGame/icons/computers/" + element + ".png";
+    loadedImages.push(img);
+  });
 };
 
 function openSettings() {
@@ -102,7 +129,6 @@ function changeStyle() {
   } else {
     document.getElementById("styleLink").href = "clicker style-dark.css";
     document.getElementById("changeStyleButton").firstElementChild.innerHTML = "Change Theme<br>(Dark Mode 🠖 Light Mode)";
-
     darkMode = true;
   }
 }
