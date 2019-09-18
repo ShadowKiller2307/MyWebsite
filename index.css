@@ -1,0 +1,20 @@
+.button{
+    width: 200px;
+    height: 90px;
+    border-radius: 20px;
+    background-color: aqua;
+    text-align: center;
+    display: inline-block;
+}
+
+.playGame {
+    font: bold 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 90px;
+    height: 90px;
+    margin: 0px;
+    /*border: 1px solid #f00;*/
+}
+
+body{
+    text-align: center;
+}
