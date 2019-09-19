@@ -1,20 +1,75 @@
-.button{
-    width: 200px;
-    height: 90px;
-    border-radius: 20px;
-    background-color: aqua;
-    text-align: center;
-    display: inline-block;
+.link{
+  width: 20%;
+  text-align: center;
+  float: left;
 }
 
-.playGame {
-    font: bold 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    line-height: 90px;
-    height: 90px;
-    margin: 0px;
-    /*border: 1px solid #f00;*/
+.description{
+  margin-top: 10px;
+  width: 70%;
+  display: inline-block;
+  font-size: 13px;
+}
+
+.button{
+  width: 260px;
+  height: 90px;
+  border-radius: 20px;
+  border: 2px solid rgb(42, 152, 185);
+  background-color: rgb(41, 226, 226);
+  text-align: center;
+  display: inline-block;
+}
+
+.playGame{
+  line-height: 90px;
+  height: 90px;
+  margin: 0px;
+  font-family: magmaWave;
+  font-size: 15px;
+}
+
+.linkToPage{
+  margin-top: 17px;
+  margin-bottom: 17px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  min-height: 94px;
+  background-color: rgb(133, 183, 228);
+  border-radius: 20px;
+}
+
+#welcomeText{
+  display: inline-block;
+  font-size: 15px;
+  background-image: linear-gradient(to right, rgb(231, 15, 231), indigo, blue, green, rgb(202, 202, 33), orange, red);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#welcome{
+  min-width: 300px;
+}
+
+#beforeContent{
+  height: 80vh;
+  text-align: center;
 }
 
 body{
-    text-align: center;
+  font: bold 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding-bottom: 70px;
+  padding: 10px;
+  /*text-align: center;*/
+}
+
+@font-face {
+  font-family: "magmaWave";
+  src: url("MagmaWave Caps.otf") format("embedded-opentype"),
+  url("MagmaWave Caps.otf") format("woff2"),
+  url("MagmaWave Caps.otf") format("woff"),
+  url("MagmaWave Caps.otf") format("truetype"),
+  url("MagmaWave Caps.otf") format("svg");
 }
