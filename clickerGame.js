@@ -408,6 +408,7 @@ function handleFileSelect(evt) {
       window[key] = decrypted[key];
     });
     reloadIconsAndText();
+    closeSettings();
   }
 }
 
