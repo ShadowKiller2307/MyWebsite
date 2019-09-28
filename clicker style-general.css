@@ -44,6 +44,7 @@ body {
   animation-iteration-count: infinite;
   top: 0px;
   border-radius: 10px;
+  box-shadow: #a8a8a8 7px 7px 5px;
 }
 
 #closeSettingsButton{
@@ -60,14 +61,7 @@ body {
 
 .settingsButton{
   transform: scale(1.0);
-}
-
-.settingsButton:hover{
-  transform: scale(1.1);
-}
-
-#changeStyleButton{
-  width: 220px;
+  width: 200px;
   height: 60px;
   border-radius: 20px;
   text-align: center;
@@ -76,12 +70,31 @@ body {
   transition: transform 0.2s ease-in-out;
 }
 
+.settingsButton:hover{
+  transform: scale(1.1);
+}
+
 #styleButtonContainer{
   position: absolute;
   bottom: 5%;
   text-align: center;
   width: 100%;
   display: inline-block;
+}
+
+#changeStyleButton{
+  width: 220px;
+}
+
+/*
+#loadGameButton2{
+  width: 200px;
+  height: 60px;
+  border-radius: 20px;
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  transition: transform 0.2s ease-in-out;
 }
 
 #loadGameButton{
@@ -102,7 +115,7 @@ body {
   display: inline-block;
   position: relative;
   transition: transform 0.2s ease-in-out;
-}
+}*/
 
 #saveLoadContainer{
   position: absolute;

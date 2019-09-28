@@ -10,15 +10,7 @@ body {
   background-color: rgb(177, 192, 191);
 }
 
-#changeStyleButton{
-  background-color: rgb(92, 92, 92);
-}
-
-#loadGameButton{
-  background-color: rgb(92, 92, 92);
-}
-
-#saveGameButton{
+.settingsButton{
   background-color: rgb(92, 92, 92);
 }
 

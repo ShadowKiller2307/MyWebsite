@@ -112,8 +112,8 @@ window.onload = function () {
 
 function openSettings() {
   document.getElementById("settings").style.display = "inline-block";
-  document.getElementById("saveGameButton").firstElementChild.innerHTML = debug ? "Save Gamestate<br>(Downloads .txt File)" : "Save Gamestate<br>(Browser's Local Storage)";
-  document.getElementById("loadGameButton").firstElementChild.innerHTML = debug ? "Load Gamestate<br>(Drag & drop File here)" : "Load Gamestate<br>(Browser's Local Storage)";
+  //document.getElementById("saveGameButton").firstElementChild.innerHTML = debug ? "Save Gamestate<br>(Downloads .txt File)" : "Save Gamestate<br>(Browser's Local Storage)";
+  //document.getElementById("loadGameButton").firstElementChild.innerHTML = debug ? "Load Gamestate<br>(Drag & drop File here)" : "Load Gamestate<br>(Browser's Local Storage)";
 }
 
 function closeSettings() {
@@ -354,7 +354,7 @@ function upgradeCompany(cheat = "no") {
 var saveState = {};
 var output;
 var decrypted;
-function saveGame() {
+function saveGame(save = "localStorage") {
   saveState.money = money;
   saveState.linesOfCode = linesOfCode;
   saveState.workers = workers;
@@ -378,7 +378,7 @@ function saveGame() {
 
   var today = new Date();
 
-  if (debug) {
+  if (save == "file") {
     var link = document.createElement("a");
     link.download = `ClickerGame SaveState (${today.getDate()}_${today.getMonth() + 1}_${today.getFullYear()} - ${today.getHours()}_${today.getMinutes()}).txt`;
     var blob = new Blob([output], { type: "text/plain" });
@@ -411,22 +411,20 @@ function handleFileSelect(evt) {
   }
 }
 
-var dropZone = document.getElementById("loadGameButton");
+var dropZone = document.getElementById("loadGameButton2");
 dropZone.addEventListener("dragover", handleDragOver, false);
 dropZone.addEventListener("drop", handleFileSelect, false);
 
 function loadGame() {
-  if (!debug) {
-    decrypted = JSON.parse(CryptoJS.AES.decrypt(localStorage.ClickerGameSaveState, "ClickerGame").toString(CryptoJS.enc.Utf8));
-    Object.keys(decrypted).forEach(function (key) {
-      if (key != "pricesCpny") {
-        window[key] = decrypted[key];
-      } else {
-        prices[4][0] = decrypted[key];
-      }
-    });
-    reloadIconsAndText();
-  }
+  decrypted = JSON.parse(CryptoJS.AES.decrypt(localStorage.ClickerGameSaveState, "ClickerGame").toString(CryptoJS.enc.Utf8));
+  Object.keys(decrypted).forEach(function (key) {
+    if (key != "pricesCpny") {
+      window[key] = decrypted[key];
+    } else {
+      prices[4][0] = decrypted[key];
+    }
+  });
+  reloadIconsAndText();
 }
 
 function reloadIconsAndText() {
