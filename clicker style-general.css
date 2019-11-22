@@ -61,7 +61,7 @@ body {
 
 .settingsButton{
   transform: scale(1.0);
-  width: 200px;
+  width: 220px;
   height: 60px;
   border-radius: 20px;
   text-align: center;
@@ -82,44 +82,22 @@ body {
   display: inline-block;
 }
 
-#changeStyleButton{
-  width: 220px;
-}
-
-/*
-#loadGameButton2{
-  width: 200px;
-  height: 60px;
-  border-radius: 20px;
-  text-align: center;
-  display: inline-block;
-  position: relative;
-  transition: transform 0.2s ease-in-out;
-}
-
-#loadGameButton{
-  width: 200px;
-  height: 60px;
-  border-radius: 20px;
-  text-align: center;
-  display: inline-block;
-  position: relative;
-  transition: transform 0.2s ease-in-out;
-}
-
-#saveGameButton{
-  width: 200px;
-  height: 60px;
-  border-radius: 20px;
-  text-align: center;
-  display: inline-block;
-  position: relative;
-  transition: transform 0.2s ease-in-out;
-}*/
-
 #saveLoadContainer{
   position: absolute;
   bottom: 40%;
+  text-align: center;
+  width: 100%;
+}
+
+#pseudocodeButton{
+}
+
+#animatedCounterButton{
+}
+
+#onOffSettings{
+  position: absolute;
+  bottom: 76%;
   text-align: center;
   width: 100%;
 }
