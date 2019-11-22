@@ -48,6 +48,10 @@
   color: transparent;
 }
 
+canvas{
+  background-color: rgb(255, 255, 255);
+}
+
 #welcome{
   min-width: 300px;
 }
