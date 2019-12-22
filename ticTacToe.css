@@ -45,22 +45,25 @@
 }
 
 #slot1, #slot4, #slot7{
-    left: 40.2%;
+    left: 40.24%;
 }
 
 #slot2, #slot5, #slot8{
-    left: 46.74%;
+    left: 46.75%;
 }
 
 #slot3, #slot6, #slot9{
-    left: 53.3%;
+    left: 53.26%;
 }
 
 .slot{
     font-size: 30px;
+    transition: 200ms;
+    background-color: rgba(240, 248, 255, 0);
 }
 
 
 .slot:hover{
-    background-color: rgba(240, 248, 255, 0.87);
+    transition: 100ms;
+    background-color: rgba(240, 248, 255, 0.87) !important;
 }
