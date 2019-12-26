@@ -14,7 +14,10 @@
     background-color: rgb(167, 167, 167);
     width: 200px;
     height: 50px;
+    line-height: 50px;
     display: inline-block;
+    text-align: center;
+    align-content: center;
 }
 
 #slot1, #slot2, #slot3{
@@ -62,8 +65,20 @@
     background-color: rgba(240, 248, 255, 0);
 }
 
-
 .slot:hover{
     transition: 100ms;
     background-color: rgba(240, 248, 255, 0.87) !important;
+}
+
+body{
+    background-color: rgb(23, 23, 24);
+}
+
+*{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
