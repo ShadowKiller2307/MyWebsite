@@ -5,8 +5,8 @@ var Players = ["X", "O"];
 var currentPlayer = 0;
 var winnigSlots = [];
 var added = false;
-var startingPlayer = 1;
-var difficulties = ["Off", "Random", "Easy", "Hard"], difficulty = 2;
+var startingPlayer = 0;
+var difficulties = ["Off", "Random", "Easy", "Hard"], difficulty = 0;
 var locked = false;
 
 drawBoard();
@@ -48,7 +48,7 @@ function resetBoard() {
         currentPlayer = 1;
         calculateBotSlot();
     }
-    console.log("---------------New Game--------------")
+    console.log("--------------New Game--------------")
 }
 
 function changeStartingPlayer() {
