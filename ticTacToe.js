@@ -5,8 +5,8 @@ var Players = ["X", "O"];
 var currentPlayer = 0;
 var winnigSlots = [];
 var added = false;
-var startingPlayer = 0;
-var difficulties = ["Off", "Random", "Easy", "Hard"], difficulty = 0;
+var startingPlayer = 1;
+var difficulties = ["Off", "Random", "Easy", "Hard"], difficulty = 2;
 var locked = false;
 
 drawBoard();
@@ -48,6 +48,7 @@ function resetBoard() {
         currentPlayer = 1;
         calculateBotSlot();
     }
+    console.log("---------------New Game--------------")
 }
 
 function changeStartingPlayer() {
@@ -58,6 +59,7 @@ function changeStartingPlayer() {
     }
     if (isBoardEmpty()) {
         currentPlayer = startingPlayer;
+        calculateBotSlot();
     }
     document.getElementById("startingPlayerButton").innerText = "Starting Player: " + Players[startingPlayer];
 }
@@ -107,31 +109,97 @@ function calculateWinner() {
     }
 }
 
+var slotNmbr = -1;
+var possibleSlots = [];
 function calculateBotSlot() {
     locked = true; // lock the board for the Bot to plan his move
     if (difficulty != 0) {
         var index = boardState.indexOf("");
-        var possibleSlots = [];
+        possibleSlots = [];
         while (index != -1) {
             possibleSlots.push(index);
             index = boardState.indexOf("", index + 1);
         }
-        var slotNmbr;
+        slotNmbr = -1;
         switch (difficulty) {
             case 1:
-                slotNmbr = possibleSlots[Math.floor(Math.random() * possibleSlots.length)];
+                slotNmbr = possibleSlots[Math.floor(Math.random() * possibleSlots.length)]; //random move
                 break;
             case 2:
-
+                var observing = [];
+                checkVertically();
+                checkHorizontally();
+                checkDiagonally();
+                randomMove();
                 break;
             case 3:
                 break;
         }
-        document.getElementById("slot" + (slotNmbr + 1)).innerHTML = "<br>" + Players[currentPlayer];
-        boardState[slotNmbr] = Players[currentPlayer];
-        calculateWinner();
+
+        if (document.getElementById("slot" + (slotNmbr + 1)).innerHTML == "") {
+            document.getElementById("slot" + (slotNmbr + 1)).innerHTML = "<br>" + Players[currentPlayer];
+            boardState[slotNmbr] = Players[currentPlayer];
+            calculateWinner();
+        } else {
+            console.log("Error with Slot " + (slotNmbr + 1))
+        }
     } else {
         locked = false;
+    }
+
+    function checkVertically() {
+        if (slotNmbr == -1) {
+            observing = [];
+            for (let column = 0; column < 3; column++) { //check for winning vertically ( | )
+                for (let row = 0; row < 9; row += 3) {
+                    observing.push(boardState[column + row]);
+                }
+                if (observing.filter((x) => (x == "O")).length == 2 && observing.includes("")) {
+                    slotNmbr = observing.indexOf("") * 3 + column;
+                    console.log("now I win vertically! Slot: " + (slotNmbr + 1));
+                }
+                observing = [];
+            }
+        }
+    }
+    function checkHorizontally() {
+        if (slotNmbr == -1) {
+            observing = [];
+            for (let row = 0; row < 3; row++) { //check for winning horizontally ( ── )
+                observing = boardState.slice(row * 3, row * 3 + 3);
+                if (observing.filter((x) => (x == "O")).length == 2 && observing.includes("")) {
+                    slotNmbr = observing.indexOf("") + 3 * row;
+                    console.log("now I win horizontally! Slot:" + (slotNmbr + 1));
+                }
+            }
+        }
+    }
+    function checkDiagonally() {
+        if (slotNmbr == -1) { //check for winning diagonally ( \ )
+            observing = [];
+            for (let i = 0; i < 3; i++) {
+                observing.push(boardState[i * 4]);
+            }
+            if (observing.filter((x) => (x == "O")).length == 2 && observing.includes("")) {
+                slotNmbr = observing.indexOf("") * 4;
+                console.log("now I win diagonally! Slot:" + (slotNmbr + 1));
+            }
+        }
+        if (slotNmbr == -1) { //check for winning diagonally ( / )
+            observing = [];
+            for (let i = 0; i < 3; i++) {
+                observing.push(boardState[i * 2 + 2]);
+            }
+            if (observing.filter((x) => (x == "O")).length == 2 && observing.includes("")) {
+                slotNmbr = observing.indexOf("") * 2 + 2;
+                console.log("now I win diagonally! Slot:" + (slotNmbr + 1));
+            }
+        }
+    }
+    function randomMove() {
+        if (slotNmbr == -1) {
+            slotNmbr = possibleSlots[Math.floor(Math.random() * possibleSlots.length)]; //random move
+        }
     }
 }
 
