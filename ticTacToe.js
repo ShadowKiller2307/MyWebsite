@@ -8,6 +8,7 @@ var added = false;
 var startingPlayer = 0;
 var difficulties = ["Off", "Random", "Easy", "Hard"], difficulty = 0;
 var locked = false;
+var score1 = 0, score2 = 0, tiecount = 0;
 
 drawBoard();
 
@@ -79,7 +80,7 @@ function changeDifficulty() {
 
 function slot(slotNmbr) {
     if (boardState[slotNmbr - 1] == "" && !locked) {
-        document.getElementById("slot" + slotNmbr).innerHTML = "<br>" + Players[currentPlayer];
+        document.getElementById("slot" + slotNmbr).innerHTML = Players[currentPlayer];
         boardState[slotNmbr - 1] = Players[currentPlayer];
         calculateWinner();
     }
@@ -101,10 +102,97 @@ function calculateWinner() {
             }
         } else { //if the board is tied
             locked = true;
+            tiecount++;
+            if (tiecount != 1) {
+                document.getElementById("ties").innerHTML = tiecount + " Ties";
+            } else {
+                document.getElementById("ties").innerHTML = tiecount + " Tie";
+            }
             setTimeout(function () { resetBoard(); }, 2000);
             for (i = 1; i < 10; i++) {
                 document.getElementById("slot" + i).setAttribute("style", "background-color: rgba(224, 40, 40, 0.795) !important");
             }
+        }
+    }
+    function calculateRows() {
+        for (i = 0; i < 3; i++) {
+            if (boardState[i * 3] == boardState[i * 3 + 1] && boardState[i * 3] == boardState[i * 3 + 2] && boardState[i * 3] != "") {
+                if (!winnigSlots.includes(i * 3)) {
+                    added = true;
+                    winnigSlots.push(i * 3);
+                }
+                if (!winnigSlots.includes(i * 3 + 1)) {
+                    added = true;
+                    winnigSlots.push(i * 3 + 1);
+                }
+                if (!winnigSlots.includes(i * 3 + 2)) {
+                    added = true;
+                    winnigSlots.push(i * 3 + 2);
+                }
+            }
+        }
+        if (added) {
+            added = false;
+            return true;
+        }
+    }
+
+    function calculateColums() {
+        for (i = 0; i < 3; i++) {
+            if (boardState[i] == boardState[i + 3] && boardState[i] == boardState[i + 6] && boardState[i] != "") {
+                added = true;
+                if (!winnigSlots.includes(i)) {
+                    added = true;
+                    winnigSlots.push(i);
+                }
+                if (!winnigSlots.includes(i + 3)) {
+                    added = true;
+                    winnigSlots.push(i + 3);
+                }
+                if (!winnigSlots.includes(i + 6)) {
+                    added = true;
+                    winnigSlots.push(i + 6);
+                }
+            }
+        }
+        if (added) {
+            added = false;
+            return true;
+        }
+    }
+
+    function calculateDiagonals() {
+        if (boardState[0] == boardState[4] && boardState[0] == boardState[8] && boardState[0] != "") {
+            if (!winnigSlots.includes(0)) {
+                added = true;
+                winnigSlots.push(0);
+            }
+            if (!winnigSlots.includes(4)) {
+                added = true;
+                winnigSlots.push(4);
+            }
+            if (!winnigSlots.includes(8)) {
+                added = true;
+                winnigSlots.push(8);
+            }
+        }
+        if (boardState[2] == boardState[4] && boardState[2] == boardState[6] && boardState[2] != "") {
+            if (!winnigSlots.includes(2)) {
+                added = true;
+                winnigSlots.push(2);
+            }
+            if (!winnigSlots.includes(4)) {
+                added = true;
+                winnigSlots.push(4);
+            }
+            if (!winnigSlots.includes(6)) {
+                added = true;
+                winnigSlots.push(6);
+            }
+        }
+        if (added) {
+            added = false;
+            return true;
         }
     }
 }
@@ -123,7 +211,7 @@ function calculateBotSlot() {
         slotNmbr = -1;
         switch (difficulty) {
             case 1:
-                slotNmbr = possibleSlots[Math.floor(Math.random() * possibleSlots.length)]; //random move
+                randomMove();
                 break;
             case 2:
                 var observing = [];
@@ -205,90 +293,15 @@ function calculateBotSlot() {
 
 function drawWinningSlots() {
     winnigSlots.map((x) => document.getElementById("slot" + (x + 1)).setAttribute("style", "background-color: rgba(13, 218, 40, 0.87) !important"));
+    if (boardState[winnigSlots[0]] == Players[0]) {
+        score1++;
+    } else {
+        score2++;
+    }
+    document.getElementById("scorePlayer1").innerHTML = "Score of Player 1: " + score1;
+    document.getElementById("scorePlayer2").innerHTML = "Score of Player 2: " + score2;
 }
 
 function isBoardEmpty() {
     return !boardState.includes("X") && !boardState.includes("O");
-}
-
-function calculateRows() {
-    for (i = 0; i < 3; i++) {
-        if (boardState[i * 3] == boardState[i * 3 + 1] && boardState[i * 3] == boardState[i * 3 + 2] && boardState[i * 3] != "") {
-            if (!winnigSlots.includes(i * 3)) {
-                added = true;
-                winnigSlots.push(i * 3);
-            }
-            if (!winnigSlots.includes(i * 3 + 1)) {
-                added = true;
-                winnigSlots.push(i * 3 + 1);
-            }
-            if (!winnigSlots.includes(i * 3 + 2)) {
-                added = true;
-                winnigSlots.push(i * 3 + 2);
-            }
-        }
-    }
-    if (added) {
-        added = false;
-        return true;
-    }
-}
-
-function calculateColums() {
-    for (i = 0; i < 3; i++) {
-        if (boardState[i] == boardState[i + 3] && boardState[i] == boardState[i + 6] && boardState[i] != "") {
-            added = true;
-            if (!winnigSlots.includes(i)) {
-                added = true;
-                winnigSlots.push(i);
-            }
-            if (!winnigSlots.includes(i + 3)) {
-                added = true;
-                winnigSlots.push(i + 3);
-            }
-            if (!winnigSlots.includes(i + 6)) {
-                added = true;
-                winnigSlots.push(i + 6);
-            }
-        }
-    }
-    if (added) {
-        added = false;
-        return true;
-    }
-}
-
-function calculateDiagonals() {
-    if (boardState[0] == boardState[4] && boardState[0] == boardState[8] && boardState[0] != "") {
-        if (!winnigSlots.includes(0)) {
-            added = true;
-            winnigSlots.push(0);
-        }
-        if (!winnigSlots.includes(4)) {
-            added = true;
-            winnigSlots.push(4);
-        }
-        if (!winnigSlots.includes(8)) {
-            added = true;
-            winnigSlots.push(8);
-        }
-    }
-    if (boardState[2] == boardState[4] && boardState[2] == boardState[6] && boardState[2] != "") {
-        if (!winnigSlots.includes(2)) {
-            added = true;
-            winnigSlots.push(2);
-        }
-        if (!winnigSlots.includes(4)) {
-            added = true;
-            winnigSlots.push(4);
-        }
-        if (!winnigSlots.includes(6)) {
-            added = true;
-            winnigSlots.push(6);
-        }
-    }
-    if (added) {
-        added = false;
-        return true;
-    }
 }

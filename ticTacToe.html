@@ -12,12 +12,17 @@
 <body>
     <div id="center">
         <div id="boardContainer">
-        <canvas id="board">
+            <canvas id="board">
 
-        </canvas>
+            </canvas>
+            <div id="slotContainer">
+                <div class="slot" id="slot1" onclick="slot(1)"> </div><div class="slot" id="slot2" onclick="slot(2)"></div><div class="slot" id="slot3" onclick="slot(3)"></div><div class="slot" id="slot4" onclick="slot(4)"></div><div class="slot" id="slot5" onclick="slot(5)"></div><div class="slot" id="slot6" onclick="slot(6)"></div><div class="slot" id="slot7" onclick="slot(7)"></div><div class="slot" id="slot8" onclick="slot(8)"></div><div class="slot" id="slot9" onclick="slot(9)"></div>
+            </div>
+            <div id="crapSlots">
+                Big Dig
+            </div>
         </div>
 
-        <div class="slot" id="slot1" onclick="slot(1)"></div><div class="slot" id="slot2" onclick="slot(2)"></div><div class="slot" id="slot3" onclick="slot(3)"></div><div class="slot" id="slot4" onclick="slot(4)"></div><div class="slot" id="slot5" onclick="slot(5)"></div><div class="slot" id="slot6" onclick="slot(6)"></div><div class="slot" id="slot7" onclick="slot(7)"></div><div class="slot" id="slot8" onclick="slot(8)"></div><div class="slot" id="slot9" onclick="slot(9)"></div>
 
         <div id="buttonContiner">
             <div id="startingPlayerButton" class="button" onclick="changeStartingPlayer()">
@@ -25,6 +30,17 @@
             </div>
             <div id="difficultyButton" class="button" onclick="changeDifficulty()">
 
+            </div>
+        </div>
+        <div id="scoreboard">
+            <div id="scorePlayer1" class="score">
+            Score of Player 1: 0
+            </div>
+            <div id="ties" class="score">
+            0 Ties
+            </div>
+            <div id="scorePlayer2" class="score">
+            Score of Player 2: 0
             </div>
         </div>
     </div>

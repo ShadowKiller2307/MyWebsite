@@ -20,49 +20,54 @@
     align-content: center;
 }
 
+.button:hover{
+    background-color: rgb(199, 199, 199);
+}
+
 #slot1, #slot2, #slot3{
-    margin-top: -4px;
-    position: absolute;
     display: inline-block;
+    position: relative;
     width: 100px;
     height: 100px;
-    top: 12px;
+    left: 610px;
+    top:-304px;
 }
 
 #slot4, #slot5, #slot6{
-    margin-top: -4px;
-    position: absolute;
     display: inline-block;
+    position: relative;
     width: 100px;
     height: 100px;
-    top: 112px;
+    left: 610px;
+    top:-308px;
 }
 
 #slot7, #slot8, #slot9{
-    margin-top: -4px;
-    position: absolute;
     display: inline-block;
+    position: relative;
     width: 100px;
     height: 100px;
-    top: 212px;
+    left: 610px;
+    top:-312px;
 }
 
 #slot1, #slot4, #slot7{
-    left: 40.24%;
+    
 }
 
 #slot2, #slot5, #slot8{
-    left: 46.75%;
+    
 }
 
 #slot3, #slot6, #slot9{
-    left: 53.26%;
+    
 }
 
 .slot{
     font-size: 30px;
     transition: 200ms;
-    background-color: rgba(240, 248, 255, 0);
+    background-color: rgba(223, 100, 29, 0.281);
+    /*background-color: rgba(240, 248, 255, 0);*/
 }
 
 .slot:hover{
@@ -70,8 +75,21 @@
     background-color: rgba(240, 248, 255, 0.87) !important;
 }
 
-body{
-    /*background-color: rgb(23, 23, 24);*/
+#slotContainer{
+    width: 300px;
+    height: 300px;
+    margin-right: 0;
+}
+
+.score{
+    background-color: rgb(167, 167, 167);
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    display: inline-block;
+    text-align: center;
+    align-content: center;
+    margin-top: 40px;
 }
 
 *{
