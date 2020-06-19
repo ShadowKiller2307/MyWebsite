@@ -57,7 +57,7 @@ function collide_point_rectangle(p1, r1, drawPoints) {
         }
         var shortestPoint = new point(compareX, compareY);
         shortestPoint = rotate_e1_around_Pos_e2_Return(shortestPoint, r1, r1.angle);
-        shortestPoint.draw(document.getElementById("canvas").getContext("2d"), "blue");
+        shortestPoint.draw("blue");
     }
     if (p1X >= r1.position.x - r1.width / 2 && //right of the left edge
         p1X <= r1.position.x + r1.width / 2 && //left of the right edge
@@ -91,7 +91,7 @@ function collide_circle_rectangle(c1, r1, drawPoints) {
     var shortestPoint = new point(compareX, compareY);
     shortestPoint = rotate_e1_around_Pos_e2_Return(shortestPoint, r1, r1.angle);
     if (drawPoints) {
-        shortestPoint.draw(document.getElementById("canvas").getContext("2d"), "blue");
+        shortestPoint.draw("blue");
     }
     if (distance_position_position(new vector(c1.position.x, c1.position.y), shortestPoint.position) <= c1.radius) {
         return true;
@@ -99,26 +99,21 @@ function collide_circle_rectangle(c1, r1, drawPoints) {
     return false;
 }
 function collide_rectangle_rectangle(r1, r2, drawPoints) {
-    if (collide(r1, r2) || collide(r2, r1)) {
+    if (collide_point_rectangle(rotate_e1_around_Pos_e2_Return(rotate_e1_around_Pos_e2_Return(new point(r1.position.x + r1.width / 2, r1.position.y + r1.height / 2), r1, -r1.angle), r2, -r2.angle), r2, drawPoints) ||
+        collide_point_rectangle(rotate_e1_around_Pos_e2_Return(rotate_e1_around_Pos_e2_Return(new point(r1.position.x + r1.width / 2, r1.position.y - r1.height / 2), r1, -r1.angle), r2, -r2.angle), r2, drawPoints) ||
+        collide_point_rectangle(rotate_e1_around_Pos_e2_Return(rotate_e1_around_Pos_e2_Return(new point(r1.position.x - r1.width / 2, r1.position.y + r1.height / 2), r1, -r1.angle), r2, -r2.angle), r2, drawPoints) ||
+        collide_point_rectangle(rotate_e1_around_Pos_e2_Return(rotate_e1_around_Pos_e2_Return(new point(r1.position.x - r1.width / 2, r1.position.y - r1.height / 2), r1, -r1.angle), r2, -r2.angle), r2, drawPoints)) {
         return true;
     }
-    return false;
-    function collide(r1, r2) {
-        if (collide_point_rectangle(rotate_e1_around_Pos_e2_Return(new point(r1.position.x + r1.width / 2, r1.position.y + r1.height / 2), r1, -r1.angle), r2, drawPoints) ||
-            collide_point_rectangle(rotate_e1_around_Pos_e2_Return(new point(r1.position.x + r1.width / 2, r1.position.y - r1.height / 2), r1, -r1.angle), r2, drawPoints) ||
-            collide_point_rectangle(rotate_e1_around_Pos_e2_Return(new point(r1.position.x - r1.width / 2, r1.position.y + r1.height / 2), r1, -r1.angle), r2, drawPoints) ||
-            collide_point_rectangle(rotate_e1_around_Pos_e2_Return(new point(r1.position.x - r1.width / 2, r1.position.y - r1.height / 2), r1, -r1.angle), r2, drawPoints)) {
-            return true;
-        }
-        if (r1.position.x + r1.width / 2 >= r2.position.x - r2.width / 2 && //right edge r1 right from left edge r2
-            r1.position.x - r1.width / 2 <= r2.position.x + r2.width / 2 && //left edge r1 left from right edge r2
-            r1.position.y + r1.height / 2 >= r2.position.y - r2.height / 2 && //bottom edge r1 below top edge r2
-            r1.position.y - r1.height / 2 <= r2.position.y + r2.height / 2 //top edge r1 above bottom edge r2
+    /*
+        if (r1.position.x + r1.width / 2 >= r2.position.x - r2.width / 2 &&  //right edge r1 right from left edge r2
+            r1.position.x - r1.width / 2 <= r2.position.x + r2.width / 2 &&  //left edge r1 left from right edge r2
+            r1.position.y + r1.height / 2 >= r2.position.y - r2.height / 2 &&//bottom edge r1 below top edge r2
+            r1.position.y - r1.height / 2 <= r2.position.y + r2.height / 2   //top edge r1 above bottom edge r2
         ) {
             return true;
-        }
-        return false;
-    }
+        }*/
+    return false;
 }
 function rotate_e1_around_Pos_e2(e1, e2, angle) {
     var c1X = Math.cos(angle) * (e1.position.x - e2.position.x) - Math.sin(angle) * (e1.position.y - e2.position.y) + e2.position.x;

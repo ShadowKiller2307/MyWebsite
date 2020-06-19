@@ -1,4 +1,4 @@
-var canvas = document.getElementById("canvas"), context = canvas.getContext("2d"), height = window.innerHeight, width = window.innerWidth, forward = false, backward = false, turningLeft = false, turningRight = false, myCar, carImg, objectsToDraw = [], order = ["point", "circle", "line", "rectangle"], elementToMove, selectedElement, clickMouseX, clickMouseY, oldMouseX = 0, oldMouseY = 0;
+var canvas = document.getElementById("canvas"), context = canvas.getContext("2d"), height = window.innerHeight, width = window.innerWidth, forward = false, backward = false, turningLeft = false, turningRight = false, myCar, myCar2, carImg, objectsToDraw = [], order = ["point", "circle", "line", "rectangle"], elementToMove, selectedElement, clickMouseX, clickMouseY, oldMouseX = 0, oldMouseY = 0;
 var settings = {
     drawPoints: false,
     collisionStop: true
@@ -6,23 +6,36 @@ var settings = {
 canvas.height = height;
 canvas.width = width;
 carImg = new Image();
-carImg.src = "car.png";
+carImg.src = "carRed.png";
 var lol = context.createPattern(carImg, "repeat");
 myCar = new car(width / 2, height / 2, 25, 45);
 myCar.speed = 0.5;
 myCar.collisionBox = new rectangle(myCar.position.x, myCar.position.y, myCar.width, myCar.height);
-var c1, r1, r2, anchor, moon, black;
+var c1, r1, r2, anchor, moon, spot;
 standard();
-// eskalation();
+function testing() {
+    objectsToDraw = [];
+    spot = new point(100, 100, "black"),
+        r1 = new rectangle(100, 70, 75, 90);
+    //r2 = new rectangle(600, 100, 150, 200);
+    settings.drawPoints = true;
+    objectsToDraw.push(spot, r1);
+}
 function standard() {
-    c1 = new circle(300, 500, 30),
+    objectsToDraw = [];
+    settings.drawPoints = false;
+    spot = new point(100, 100, "black"),
+        c1 = new circle(300, 500, 30),
         r1 = new rectangle(100, 70, 75, 90),
-        r2 = new rectangle(600, 100, 150, 200),
-        black = new point(100, 100, "black");
+        r2 = new rectangle(600, 100, 150, 200);
     r2.children.push(c1);
-    objectsToDraw.push(c1, r1, r2, black);
+    objectsToDraw.push(c1, r1, r2, spot);
+}
+function demo() {
+    objectsToDraw = [];
 }
 function eskalation() {
+    objectsToDraw = [];
     c1 = new circle(300, 500, 30),
         r1 = new rectangle(100, 70, 75, 90, undefined, undefined, 0.1, undefined, 1),
         r2 = new rectangle(600, 100, 150, 200, undefined, undefined, 0.1, undefined, 1),
@@ -63,30 +76,43 @@ document.onmousedown = function getClick(event) {
                     elementToMove = element;
                 }
             });
-            elementToMove.angle += Math.PI / 8;
+            if (elementToMove == selectedElement) {
+                elementToMove.rotation += Math.PI / 16;
+            }
+            else {
+                elementToMove.angle += Math.PI / 8;
+            }
             elementToMove = undefined;
             break;
         default:
             break;
     }
 };
-document.onmousemove = function moveElement(event) {
+document.onmousemove = function (event) {
     var MouseX = event.clientX;
     var MouseY = event.clientY;
     if (elementToMove && MouseY > 0) {
         var movement = new vector(MouseX - oldMouseX, MouseY - oldMouseY);
-        elementToMove.add_Position(movement);
+        if (elementToMove == selectedElement) {
+            elementToMove.accelerate(movement.divide_Return(8));
+        }
+        else {
+            elementToMove.add_Position(movement);
+        }
     }
     oldMouseX = MouseX;
     oldMouseY = MouseY;
 };
 document.onmouseup = function dropElement(event) {
-    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY) {
+    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button != 1) {
         selectedElement = elementToMove;
     }
-    elementToMove = undefined;
+    if (event.button != 1) {
+        elementToMove = undefined;
+    }
 };
 document.body.addEventListener("keydown", function (event) {
+    console.log(event.keyCode);
     switch (event.keyCode) {
         case 87: //W
             forward = true;
@@ -107,8 +133,19 @@ document.body.addEventListener("keydown", function (event) {
             myCar.velocity.x = 0;
             myCar.velocity.y = 0;
             break;
-        case 46:
-            remove(selectedElement);
+        case 46: //Delete
+            remove();
+            break;
+        case 76: //L
+            document.getElementById("file-input").click();
+            break;
+        case 37: //left arrow
+            break;
+        case 38: //top arrow
+            break;
+        case 39: //right arrow
+            break;
+        case 40: //down arrow
             break;
         default:
             break;
@@ -173,21 +210,23 @@ function update() {
     //draw the other shapes
     objectsToDraw.forEach(function (thing) {
         if (thing == selectedElement) {
-            thing.draw(context, "LawnGreen");
+            thing.draw("LawnGreen");
             return;
         }
         else {
             if (thing.collision) {
-                thing.draw(context, "red");
-                thing.velocity = new vector(0, 0);
+                thing.draw("red");
+                if (settings.collisionStop) {
+                    thing.velocity = new vector(0, 0);
+                }
             }
             else {
-                thing.draw(context);
+                thing.draw();
             }
         }
     });
     //draw the car
-    myCar.draw(context, carImg);
+    myCar.draw(carImg);
     window.requestAnimationFrame(update);
 }
 function update_Collisions() {
@@ -219,7 +258,57 @@ function get_Order(obj1, obj2) {
         return { first: obj2, second: obj1, fun: "collide_" + obj2.constructor.name + "_" + obj1.constructor.name };
     }
 }
-function remove(obj) {
-    objectsToDraw.splice(objectsToDraw.indexOf(obj), 1);
+function remove() {
+    if (selectedElement) {
+        objectsToDraw.splice(objectsToDraw.indexOf(selectedElement), 1);
+    }
 }
+function duplicate() {
+    if (selectedElement) {
+        var temp = Object.create(selectedElement);
+        temp.position = selectedElement.position;
+        temp.angle = selectedElement.angle;
+        temp.rotation = selectedElement.rotation;
+        temp.color = selectedElement.color;
+        temp.add_Position(new vector(-20, 20));
+        objectsToDraw.push(temp);
+    }
+}
+function save() {
+    var element = document.createElement('a');
+    var json = JSON.stringify({ "objects": objectsToDraw, "car": myCar }, undefined, 2);
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(json));
+    element.setAttribute('download', "CarSimulator");
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+function load() {
+    if (document.getElementById("file-input").files == 0) {
+        alert("E R R O R : Please select a valid txt-file");
+        return;
+    }
+    var file = document.getElementById("file-input").files[0];
+    var reader = new FileReader();
+    reader.onloadend = function () {
+        var data = JSON.parse(reader.result);
+        var temp = new car(data.car.position.x, data.car.position.y, data.car.width, data.car.height, data.car.angle, data.car.rotation, data.car.friction, data.car.rotationFriction);
+        temp.speed = data.car.speed;
+        // temp.collisionBox = data.car.collisionBox;
+        //myCar = data.car;
+        //(myCar as any).__proto__ = element;
+        //(Object as any).setPrototypeOf(myCar, element);
+        // (myCar as any).prototype = Object.create(element.prototype);
+        console.log(temp);
+        myCar = temp;
+        // objectsToDraw = data.objects;
+        // objectsToDraw.forEach((thing) => (Object as any).setPrototypeOf(thing, element))
+    };
+    reader.addEventListener("error", function () {
+        alert("E R R O R : Failed to read file");
+    });
+    reader.readAsText(file);
+}
+document.getElementById("file-input").onchange = load;
 //# sourceMappingURL=Car.js.map

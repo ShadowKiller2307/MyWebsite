@@ -12,9 +12,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var element = /** @class */ (function () {
-    function element(x, y, angle, rotation, friction, rotationFriction) {
+    function element(x, y, color, angle, rotation, friction, rotationFriction) {
         this.position = new vector(x, y);
         this.velocity = new vector(0, 0);
+        this.color = color;
         this.rotation = rotation || 0;
         this.angle = angle || 0;
         this.friction = friction || 0.93;
@@ -24,14 +25,16 @@ var element = /** @class */ (function () {
     element.prototype.update = function () {
         var _this = this;
         this.angle += this.rotation;
+        if (this.rotation) {
+            this.children.forEach(function (element) {
+                element.angle += _this.rotation;
+                rotate_e1_around_Pos_e2(element, _this, _this.rotation);
+            });
+        }
+        this.rotation *= this.rotationFriction;
         if (Math.abs(this.rotation) < 0.001) {
             this.rotation = 0;
         }
-        this.children.forEach(function (element) {
-            element.angle += _this.rotation;
-            rotate_e1_around_Pos_e2(element, _this, _this.rotation);
-        });
-        this.rotation *= this.rotationFriction;
         this.velocity.multiply(this.friction);
         if (Math.abs(this.velocity.x) < 0.001) {
             this.velocity.x = 0;
@@ -40,6 +43,18 @@ var element = /** @class */ (function () {
             this.velocity.y = 0;
         }
         this.position.add(this.velocity);
+        if (this.position.x > width) {
+            this.position.x = 0;
+        }
+        if (this.position.x < 0) {
+            this.position.x = width;
+        }
+        if (this.position.y > height) {
+            this.position.y = 0;
+        }
+        if (this.position.y < 0) {
+            this.position.y = height;
+        }
     };
     element.prototype.accelerate = function (value) {
         this.velocity.add(value);
@@ -58,7 +73,7 @@ var element = /** @class */ (function () {
 var car = /** @class */ (function (_super) {
     __extends(car, _super);
     function car(x, y, width, height, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, angle, rotation, friction, rotationFriction) || this;
+        var _this = _super.call(this, x, y, undefined, angle, rotation, friction, rotationFriction) || this;
         _this.width = width;
         _this.height = height;
         _this.collisionBox = new rectangle(x, y, width, height, "rgba(0,0,0,0)");
@@ -88,8 +103,8 @@ var car = /** @class */ (function (_super) {
         this.collisionBox.position = this.position;
         this.collisionBox.angle = this.angle;
     };
-    car.prototype.draw = function (context, carImg) {
-        if (this.collisionBox.collision) {
+    car.prototype.draw = function (carImg) {
+        if (this.collisionBox.collision && settings.collisionStop) {
             this.velocity = new vector(0, 0);
         }
         context.save();
@@ -99,10 +114,10 @@ var car = /** @class */ (function (_super) {
         context.restore();
         if (this.drawCollisionBox) {
             if (this.collisionBox.collision) {
-                this.collisionBox.draw(context, "red");
+                this.collisionBox.draw("red");
             }
             else {
-                this.collisionBox.draw(context);
+                this.collisionBox.draw();
             }
         }
     };
@@ -111,14 +126,13 @@ var car = /** @class */ (function (_super) {
 var point = /** @class */ (function (_super) {
     __extends(point, _super);
     function point(x, y, color, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, angle, rotation, friction, rotationFriction) || this;
+        var _this = _super.call(this, x, y, color || "black", angle, rotation, friction, rotationFriction) || this;
         _this.collision = false;
-        _this.color = color || "black";
         _this.radius = 5;
         _this.children = [];
         return _this;
     }
-    point.prototype.draw = function (context, color) {
+    point.prototype.draw = function (color) {
         context.fillStyle = color || this.color;
         context.save();
         context.translate(this.position.x, this.position.y);
@@ -133,13 +147,12 @@ var point = /** @class */ (function (_super) {
 var circle = /** @class */ (function (_super) {
     __extends(circle, _super);
     function circle(x, y, radius, color, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, angle, rotation, friction, rotationFriction) || this;
+        var _this = _super.call(this, x, y, color || "deepskyblue", angle, rotation, friction, rotationFriction) || this;
         _this.radius = radius;
-        _this.color = color || "deepskyblue";
         _this.children = [];
         return _this;
     }
-    circle.prototype.draw = function (context, color) {
+    circle.prototype.draw = function (color) {
         context.fillStyle = color || this.color;
         context.save();
         context.translate(this.position.x, this.position.y);
@@ -154,15 +167,14 @@ var circle = /** @class */ (function (_super) {
 var rectangle = /** @class */ (function (_super) {
     __extends(rectangle, _super);
     function rectangle(x, y, width, height, color, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, angle, rotation, friction, rotationFriction) || this;
+        var _this = _super.call(this, x, y, color || "forestgreen", angle, rotation, friction, rotationFriction) || this;
         _this.width = width;
         _this.height = height;
-        _this.color = color || "forestgreen";
         _this.drawPoints = false;
         _this.children = [];
         return _this;
     }
-    rectangle.prototype.draw = function (context, color) {
+    rectangle.prototype.draw = function (color) {
         context.fillStyle = color || this.color;
         context.save();
         context.translate(this.position.x, this.position.y);
