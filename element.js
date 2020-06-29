@@ -1,18 +1,5 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var element = /** @class */ (function () {
-    function element(x, y, color, angle, rotation, friction, rotationFriction) {
+class element {
+    constructor(x, y, color, angle, rotation, friction, rotationFriction) {
         this.position = new vector(x, y);
         this.velocity = new vector(0, 0);
         this.color = color;
@@ -22,13 +9,18 @@ var element = /** @class */ (function () {
         this.rotationFriction = rotationFriction || 0.95;
         this.children = [];
     }
-    element.prototype.update = function () {
-        var _this = this;
+    update() {
         this.angle += this.rotation;
+        if (this.angle < 0) {
+            this.angle += 2 * Math.PI;
+        }
+        else if (this.angle > 2 * Math.PI) {
+            this.angle -= 2 * Math.PI;
+        }
         if (this.rotation) {
-            this.children.forEach(function (element) {
-                element.angle += _this.rotation;
-                rotate_e1_around_Pos_e2(element, _this, _this.rotation);
+            this.children.forEach(element => {
+                element.angle += this.rotation;
+                rotate_e1_around_Pos_e2(element, this, this.rotation);
             });
         }
         this.rotation *= this.rotationFriction;
@@ -55,42 +47,44 @@ var element = /** @class */ (function () {
         if (this.position.y < 0) {
             this.position.y = height;
         }
-    };
-    element.prototype.accelerate = function (value) {
+    }
+    accelerate(value) {
         this.velocity.add(value);
-        this.children.forEach(function (element) {
+        this.children.forEach(element => {
             element.accelerate(value);
         });
-    };
-    element.prototype.add_Position = function (value) {
+    }
+    add_Position(value) {
         this.position.add(value);
-        this.children.forEach(function (element) {
+        this.children.forEach(element => {
             element.add_Position(value);
         });
-    };
-    return element;
-}());
-var car = /** @class */ (function (_super) {
-    __extends(car, _super);
-    function car(x, y, width, height, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, undefined, angle, rotation, friction, rotationFriction) || this;
-        _this.width = width;
-        _this.height = height;
-        _this.collisionBox = new rectangle(x, y, width, height, "rgba(0,0,0,0)");
-        _this.drawCollisionBox = false;
-        _this.children = [];
-        return _this;
+        return this.position;
     }
-    car.prototype.update = function () {
-        var _this = this;
+    draw(color) {
+    }
+}
+class car extends element {
+    constructor(x, y, width, height, angle, rotation, friction, rotationFriction) {
+        super(x, y, undefined, angle, rotation, friction, rotationFriction);
+        this.width = width;
+        this.height = height;
+        this.collisionBox = new rectangle(x, y, width, height, "rgba(0,0,0,0)");
+        this.drawCollisionBox = false;
+        this.children = [];
+        this.type = "car";
+        this.carImg = new Image();
+        console.log(this.carImg);
+    }
+    update() {
         this.angle += this.rotation;
         this.rotation *= this.rotationFriction;
         if (Math.abs(this.rotation) < 0.001) {
             this.rotation = 0;
         }
-        this.children.forEach(function (element) {
-            element.angle += _this.rotation;
-            rotate_e1_around_Pos_e2(element, _this, _this.rotation);
+        this.children.forEach(element => {
+            element.angle += this.rotation;
+            rotate_e1_around_Pos_e2(element, this, this.rotation);
         });
         this.velocity.multiply(this.friction);
         if (Math.abs(this.velocity.x) < 0.001) {
@@ -102,15 +96,27 @@ var car = /** @class */ (function (_super) {
         this.position.add(this.velocity);
         this.collisionBox.position = this.position;
         this.collisionBox.angle = this.angle;
-    };
-    car.prototype.draw = function (carImg) {
+        if (this.position.x > width) {
+            this.position.x = 0;
+        }
+        if (this.position.x < 0) {
+            this.position.x = width;
+        }
+        if (this.position.y > height) {
+            this.position.y = 0;
+        }
+        if (this.position.y < 0) {
+            this.position.y = height;
+        }
+    }
+    draw() {
         if (this.collisionBox.collision && settings.collisionStop) {
             this.velocity = new vector(0, 0);
         }
         context.save();
         context.translate(this.position.x, this.position.y);
         context.rotate(this.angle);
-        context.drawImage(carImg, -(this.width / 2), -(this.height / 2), this.width, this.height);
+        context.drawImage(this.carImg, -(this.width / 2), -(this.height / 2), this.width, this.height);
         context.restore();
         if (this.drawCollisionBox) {
             if (this.collisionBox.collision) {
@@ -120,19 +126,17 @@ var car = /** @class */ (function (_super) {
                 this.collisionBox.draw();
             }
         }
-    };
-    return car;
-}(element));
-var point = /** @class */ (function (_super) {
-    __extends(point, _super);
-    function point(x, y, color, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, color || "black", angle, rotation, friction, rotationFriction) || this;
-        _this.collision = false;
-        _this.radius = 5;
-        _this.children = [];
-        return _this;
     }
-    point.prototype.draw = function (color) {
+}
+class point extends element {
+    constructor(x, y, color, angle, rotation, friction, rotationFriction) {
+        super(x, y, color || "black", angle, rotation, friction, rotationFriction);
+        this.collision = false;
+        this.radius = 5;
+        this.children = [];
+        this.type = "point";
+    }
+    draw(color) {
         context.fillStyle = color || this.color;
         context.save();
         context.translate(this.position.x, this.position.y);
@@ -141,18 +145,16 @@ var point = /** @class */ (function (_super) {
         context.arc(0, 0, this.radius, 0, 2 * Math.PI);
         context.fill();
         context.restore();
-    };
-    return point;
-}(element));
-var circle = /** @class */ (function (_super) {
-    __extends(circle, _super);
-    function circle(x, y, radius, color, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, color || "deepskyblue", angle, rotation, friction, rotationFriction) || this;
-        _this.radius = radius;
-        _this.children = [];
-        return _this;
     }
-    circle.prototype.draw = function (color) {
+}
+class circle extends element {
+    constructor(x, y, radius, color, angle, rotation, friction, rotationFriction) {
+        super(x, y, color || "deepskyblue", angle, rotation, friction, rotationFriction);
+        this.radius = radius;
+        this.children = [];
+        this.type = "circle";
+    }
+    draw(color) {
         context.fillStyle = color || this.color;
         context.save();
         context.translate(this.position.x, this.position.y);
@@ -161,20 +163,122 @@ var circle = /** @class */ (function (_super) {
         context.arc(0, 0, this.radius, 0, 2 * Math.PI);
         context.fill();
         context.restore();
-    };
-    return circle;
-}(element));
-var rectangle = /** @class */ (function (_super) {
-    __extends(rectangle, _super);
-    function rectangle(x, y, width, height, color, angle, rotation, friction, rotationFriction) {
-        var _this = _super.call(this, x, y, color || "forestgreen", angle, rotation, friction, rotationFriction) || this;
-        _this.width = width;
-        _this.height = height;
-        _this.drawPoints = false;
-        _this.children = [];
-        return _this;
     }
-    rectangle.prototype.draw = function (color) {
+}
+class line extends element {
+    constructor(x, y, length, color, angle, rotation, friction, rotationFriction) {
+        super(x, y, color || "Coral", angle, rotation, friction, rotationFriction);
+        this.length = length;
+        this.type = "line";
+        this.drawPoints = false;
+        this.pos1 = rotate_e1_around_Pos_e2_Return(new point(this.position.x - this.length / 2, this.position.y), this, this.angle);
+        this.pos2 = rotate_e1_around_Pos_e2_Return(new point(this.position.x + this.length / 2, this.position.y), this, this.angle);
+    }
+    update() {
+        this.angle += this.rotation;
+        if (this.angle < 0) {
+            this.angle += 2 * Math.PI;
+        }
+        else if (this.angle > 2 * Math.PI) {
+            this.angle -= 2 * Math.PI;
+        }
+        if (this.rotation) {
+            this.children.forEach(element => {
+                element.angle += this.rotation;
+                rotate_e1_around_Pos_e2(element, this, this.rotation);
+            });
+            this.pos1 = rotate_e1_around_Pos_e2_Return(this.pos1, this, this.rotation);
+            this.pos2 = rotate_e1_around_Pos_e2_Return(this.pos2, this, this.rotation);
+        }
+        this.rotation *= this.rotationFriction;
+        if (Math.abs(this.rotation) < 0.001) {
+            this.rotation = 0;
+        }
+        this.velocity.multiply(this.friction);
+        if (Math.abs(this.velocity.x) < 0.001) {
+            this.velocity.x = 0;
+        }
+        if (Math.abs(this.velocity.y) < 0.001) {
+            this.velocity.y = 0;
+        }
+        this.pos1.position.add(this.velocity);
+        this.pos2.position.add(this.velocity);
+        this.pos1.update();
+        this.pos2.update();
+        this.calculatePositionAndLengthAndAngle();
+        if (this.position.x > width) {
+            this.position.x = 0;
+        }
+        if (this.position.x < 0) {
+            this.position.x = width;
+        }
+        if (this.position.y > height) {
+            this.position.y = 0;
+        }
+        if (this.position.y < 0) {
+            this.position.y = height;
+        }
+    }
+    add_Position(value, pos1_2) {
+        if (!pos1_2) {
+            this.pos1.position.add(value);
+            this.pos2.position.add(value);
+            this.pos1.update();
+            this.pos2.update();
+            this.children.forEach(element => {
+                element.add_Position(value);
+            });
+            return this.position;
+        }
+        else {
+            pos1_2.position.add(value);
+        }
+    }
+    accelerate(value, pos1_2) {
+        if (!pos1_2) {
+            this.pos1.accelerate(value);
+            this.pos2.accelerate(value);
+            this.children.forEach(element => {
+                element.accelerate(value);
+            });
+        }
+        else {
+            pos1_2.accelerate(value);
+        }
+    }
+    calculatePositionAndLengthAndAngle() {
+        this.length = distance_point_point(this.pos1, this.pos2);
+        this.position = this.pos1.position.add_Return(fromVectorToVector(this.pos1.position, this.pos2.position).divide_Return(2));
+        this.angle = fromVectorToVector(this.pos1.position, this.pos2.position).get_Angle();
+    }
+    rotateOnce(angle) {
+        this.pos1 = rotate_e1_around_Pos_e2_Return(this.pos1, this, angle);
+        this.pos2 = rotate_e1_around_Pos_e2_Return(this.pos2, this, angle);
+    }
+    draw(color) {
+        context.strokeStyle = color || this.color;
+        context.beginPath();
+        context.moveTo(this.pos1.position.x, this.pos1.position.y);
+        context.lineWidth = 4;
+        context.lineTo(this.pos2.position.x, this.pos2.position.y);
+        context.stroke();
+        if (this.drawPoints) {
+            this.pos1.draw("blue");
+            this.pos2.draw("blue");
+            new point(this.position.x, this.position.y).draw("green");
+        }
+    }
+}
+class rectangle extends element {
+    constructor(x, y, width, height, color, angle, rotation, friction, rotationFriction) {
+        super(x, y, color || "forestgreen", angle, rotation, friction, rotationFriction);
+        this.width = width;
+        this.height = height;
+        this.drawPoints = false;
+        this.children = [];
+        this.type = "rectangle";
+    }
+    draw(color) {
         context.fillStyle = color || this.color;
         context.save();
         context.translate(this.position.x, this.position.y);
@@ -184,19 +288,11 @@ var rectangle = /** @class */ (function (_super) {
         context.fill();
         context.restore();
         if (this.drawPoints) {
-            new point(Math.cos(this.angle) * ((this.position.x - this.width / 2) - this.position.x) - Math.sin(this.angle) * ((this.position.y - this.height / 2) - this.position.y) + this.position.x, Math.sin(this.angle) * ((this.position.x - this.width / 2) - this.position.x) + Math.cos(this.angle) * ((this.position.y - this.height / 2) - this.position.y) + this.position.y).draw(context);
-            new point(Math.cos(this.angle) * ((this.position.x + this.width / 2) - this.position.x) - Math.sin(this.angle) * ((this.position.y - this.height / 2) - this.position.y) + this.position.x, Math.sin(this.angle) * ((this.position.x + this.width / 2) - this.position.x) + Math.cos(this.angle) * ((this.position.y - this.height / 2) - this.position.y) + this.position.y).draw(context);
-            new point(Math.cos(this.angle) * ((this.position.x - this.width / 2) - this.position.x) - Math.sin(this.angle) * ((this.position.y + this.height / 2) - this.position.y) + this.position.x, Math.sin(this.angle) * ((this.position.x - this.width / 2) - this.position.x) + Math.cos(this.angle) * ((this.position.y + this.height / 2) - this.position.y) + this.position.y).draw(context);
-            new point(Math.cos(this.angle) * ((this.position.x + this.width / 2) - this.position.x) - Math.sin(this.angle) * ((this.position.y + this.height / 2) - this.position.y) + this.position.x, Math.sin(this.angle) * ((this.position.x + this.width / 2) - this.position.x) + Math.cos(this.angle) * ((this.position.y + this.height / 2) - this.position.y) + this.position.y).draw(context);
+            rotate_e1_around_Pos_e2_Return(new point(this.position.x - this.width / 2, this.position.y - this.height / 2), this, -this.angle).draw("blue");
+            rotate_e1_around_Pos_e2_Return(new point(this.position.x + this.width / 2, this.position.y - this.height / 2), this, -this.angle).draw("blue");
+            rotate_e1_around_Pos_e2_Return(new point(this.position.x + this.width / 2, this.position.y + this.height / 2), this, -this.angle).draw("blue");
+            rotate_e1_around_Pos_e2_Return(new point(this.position.x - this.width / 2, this.position.y + this.height / 2), this, -this.angle).draw("blue");
         }
-    };
-    return rectangle;
-}(element));
-var line = /** @class */ (function (_super) {
-    __extends(line, _super);
-    function line() {
-        return _super !== null && _super.apply(this, arguments) || this;
     }
-    return line;
-}(element));
+}
 //# sourceMappingURL=element.js.map

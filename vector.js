@@ -1,64 +1,55 @@
-var vector = /** @class */ (function () {
-    function vector(x, y) {
+class vector {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.type = "vector";
     }
-    vector.prototype.add = function (vec) {
+    add(vec) {
         this.x += vec.x;
         this.y += vec.y;
-    };
-    vector.prototype.add_Return = function (vec) {
+    }
+    add_Return(vec) {
         return new vector(this.x + vec.x, this.y + vec.y);
-    };
-    vector.prototype.subtract = function (vec) {
+    }
+    subtract(vec) {
         this.y -= vec.y;
         this.x -= vec.x;
-    };
-    vector.prototype.subtract_Return = function (vec) {
+    }
+    subtract_Return(vec) {
         return new vector(this.x - vec.x, this.y - vec.y);
-    };
-    vector.prototype.multiply = function (value) {
+    }
+    multiply(value) {
         this.x *= value;
         this.y *= value;
-    };
-    vector.prototype.multiply_Return = function (value) {
+    }
+    multiply_Return(value) {
         return new vector(this.x * value, this.y * value);
-    };
-    vector.prototype.divide = function (value) {
+    }
+    divide(value) {
         this.x /= value;
         this.y /= value;
-    };
-    vector.prototype.divide_Return = function (value) {
+    }
+    divide_Return(value) {
         return new vector(this.x / value, this.y / value);
-    };
-    vector.prototype.get_Length = function () {
+    }
+    get_Length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
-    };
-    vector.prototype.set_Length = function (length) {
-        var angle = this.get_Angle();
+    }
+    set_Length(length) {
+        let angle = this.get_Angle();
         this.x = Math.cos(angle) * length;
         this.y = Math.sin(angle) * length;
-    };
-    vector.prototype.set_Angle = function (angle) {
-        var length = this.get_Length();
+    }
+    set_Angle(angle) {
+        let length = this.get_Length();
         this.x = Math.cos(angle) * length;
         this.y = Math.sin(angle) * length;
-    };
-    vector.prototype.get_Angle = function () {
+    }
+    get_Angle() {
         return Math.atan2(this.y, this.x);
-    };
-    vector.prototype.setX = function (x) {
-        this.x = x;
-    };
-    vector.prototype.getX = function () {
-        return this.x;
-    };
-    vector.prototype.setY = function (y) {
-        this.y = y;
-    };
-    vector.prototype.getY = function () {
-        return this.y;
-    };
-    return vector;
-}());
+    }
+}
+function fromVectorToVector(v1, v2) {
+    return v2.subtract_Return(v1);
+}
 //# sourceMappingURL=vector.js.map
