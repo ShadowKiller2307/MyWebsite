@@ -333,12 +333,18 @@ function update() {
     for (let i = 0; i < Cars.length; i++) {
         if (window["fw" + (i + 1)] && !window["bw" + (i + 1)]) {
             let v = new vector(0, 0);
-            if (window["tl" + (i + 1)] && window["tr" + (i + 1)] && Cars[i].currentBoost > 5) {
-                v.set_Length(Cars[i].speed * 5);
-                Cars[i].currentBoost -= 5;
-                Cars[i].boosting = true;
+            if (window["tl" + (i + 1)] && window["tr" + (i + 1)]) { //trying to boost
+                if (Cars[i].currentBoost > 5) { //boosting
+                    v.set_Length(Cars[i].speed * 2.5);
+                    Cars[i].currentBoost -= 5;
+                    Cars[i].boosting = true;
+                }
+                else { //not able to boost
+                    v.set_Length(Cars[i].speed);
+                    Cars[i].boosting = false;
+                }
             }
-            else {
+            else { //not trying boosting
                 v.set_Length(Cars[i].speed);
                 if (Cars[i].currentBoost < Cars[i].maxBoost) {
                     Cars[i].currentBoost++;
@@ -353,6 +359,13 @@ function update() {
             v.set_Length(0.1);
             v.set_Angle(Cars[i].angle + Math.PI / 2);
             Cars[i].accelerate(v);
+            Cars[i].boosting = false;
+        }
+        else {
+            Cars[i].boosting = false;
+            if (Cars[i].currentBoost < Cars[i].maxBoost) {
+                Cars[i].currentBoost++;
+            }
         }
         if (window["tl" + (i + 1)] && !window["tr" + (i + 1)]) {
             Cars[i].rotation = -0.03 * Math.PI / 2;
