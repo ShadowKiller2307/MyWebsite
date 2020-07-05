@@ -1,9 +1,11 @@
 class vector {
     x: number;
     y: number;
+    type: string;
     constructor(x: number, y: number) {
-        this.x = x
-        this.y = y
+        this.x = x;
+        this.y = y;
+        this.type = "vector";
     }
 
     add(vec: vector) {
@@ -61,20 +63,8 @@ class vector {
     get_Angle() {
         return Math.atan2(this.y, this.x);
     }
+}
 
-    setX(x: number) {
-        this.x = x;
-    }
-
-    getX() {
-        return this.x;
-    }
-
-    setY(y: number) {
-        this.y = y;
-    }
-
-    getY() {
-        return this.y;
-    }
+function fromVectorToVector(v1: vector, v2: vector) {
+    return v2.subtract_Return(v1);
 }

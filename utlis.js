@@ -32,7 +32,7 @@ function collide_point_line(p1, l1, drawPoints) {
     t = Math.max(0, Math.min(1, t));
     let shortestPoint = new point(l1.pos1.position.x + t * (l1.pos2.position.x - l1.pos1.position.x), l1.pos1.position.y + t * (l1.pos2.position.y - l1.pos1.position.y));
     if (drawPoints) {
-        shortestPoint.draw("blue");
+        //shortestPoint.draw("blue");
     }
     return Math.sqrt(distance_position_position(p1.position, shortestPoint.position)) < buffer;
 }
@@ -62,7 +62,7 @@ function collide_point_rectangle(p1, r1, drawPoints) {
         }
         let shortestPoint = new point(compareX, compareY);
         shortestPoint = rotate_e1_around_Pos_e2_Return(shortestPoint, r1, r1.angle);
-        shortestPoint.draw("blue");
+        //shortestPoint.draw("blue");
     }
     if (p1X >= r1.position.x - r1.width / 2 && //right of the left edge
         p1X <= r1.position.x + r1.width / 2 && //left of the right edge
@@ -105,7 +105,7 @@ function collide_circle_rectangle(c1, r1, drawPoints) {
     let shortestPoint = new point(compareX, compareY);
     shortestPoint = rotate_e1_around_Pos_e2_Return(shortestPoint, r1, r1.angle);
     if (drawPoints) {
-        shortestPoint.draw("blue");
+        //shortestPoint.draw("blue");
     }
     if (distance_position_position(new vector(c1.position.x, c1.position.y), shortestPoint.position) <= c1.radius) {
         return true;

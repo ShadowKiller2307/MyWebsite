@@ -1,12 +1,12 @@
 class element {
-    constructor(x, y, color, angle, rotation, friction, rotationFriction) {
+    constructor(x = 100, y = 100, color = "Magenta", angle = 0, rotation = 0, friction = 0.93, rotationFriction = 0.95) {
         this.position = new vector(x, y);
         this.velocity = new vector(0, 0);
         this.color = color;
-        this.rotation = rotation || 0;
-        this.angle = angle || 0;
-        this.friction = friction || 0.93;
-        this.rotationFriction = rotationFriction || 0.95;
+        this.rotation = rotation;
+        this.angle = angle;
+        this.friction = friction;
+        this.rotationFriction = rotationFriction;
         this.children = [];
     }
     update() {
@@ -65,16 +65,17 @@ class element {
     }
 }
 class car extends element {
-    constructor(x, y, width, height, angle, rotation, friction, rotationFriction) {
+    constructor(x, y, width, height, angle, rotation, friction, rotationFriction, maxBoost = 600) {
         super(x, y, undefined, angle, rotation, friction, rotationFriction);
         this.width = width;
         this.height = height;
         this.collisionBox = new rectangle(x, y, width, height, "rgba(0,0,0,0)");
         this.drawCollisionBox = false;
         this.children = [];
+        this.maxBoost = maxBoost;
+        this.currentBoost = 0;
         this.type = "car";
         this.carImg = new Image();
-        console.log(this.carImg);
     }
     update() {
         this.angle += this.rotation;
@@ -116,6 +117,9 @@ class car extends element {
         context.save();
         context.translate(this.position.x, this.position.y);
         context.rotate(this.angle);
+        if (this.boosting) {
+            context.drawImage(fireImg, -(this.width / 2), (this.height / 2) - this.height / 8, this.width, this.height);
+        }
         context.drawImage(this.carImg, -(this.width / 2), -(this.height / 2), this.width, this.height);
         context.restore();
         if (this.drawCollisionBox) {
@@ -220,7 +224,10 @@ class line extends element {
         }
     }
     add_Position(value, pos1_2) {
-        if (!pos1_2) {
+        if (pos1_2) {
+            pos1_2.position.add(value);
+        }
+        else {
             this.pos1.position.add(value);
             this.pos2.position.add(value);
             this.pos1.update();
@@ -229,9 +236,6 @@ class line extends element {
                 element.add_Position(value);
             });
             return this.position;
-        }
-        else {
-            pos1_2.position.add(value);
         }
     }
     accelerate(value, pos1_2) {

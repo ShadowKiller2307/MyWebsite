@@ -1,6 +1,6 @@
 const order = ["point", "circle", "line", "rectangle"];
 var canvas = document.getElementById("canvas"), [fw1, bw1, tl1, tr1, fw2, bw2, tl2, tr2, fw3, bw3, tl3, tr3] = new Array(12).fill(false);
-let context = canvas.getContext("2d"), height = window.innerHeight, width = window.innerWidth, Cars = [], objectsToDraw = [], affectedByGravity = [], elementToMove, lineEndToMove, selectedElement, clickMouseX, clickMouseY, oldMouseX = 0, oldMouseY = 0, map = {
+let context = canvas.getContext("2d"), height = window.innerHeight, width = window.innerWidth, menu = document.getElementById("menu"), fireImg = new Image(), Cars = [], objectsToDraw = [], affectedByGravity = [], elementToMove, lineEndToMove, selectedElement, clickMouseX, clickMouseY, oldMouseX = 0, oldMouseY = 0, map = {
     "vector": vector,
     "point": point,
     "line": line,
@@ -22,12 +22,15 @@ let settings = {
     "purple": "carPurple.png",
     "yellow": "carYellow.png",
 };
+canvas.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); };
+menu.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); };
+fireImg.src = "flame.png";
 canvas.height = height;
 canvas.width = width;
 //let lol = context.createPattern(carImg, "repeat");
 let car1, car2, car3;
 let c1, r1, r2, anchor, moon, spot, l1;
-testing();
+demo();
 function testing() {
     Cars = [];
     objectsToDraw = [];
@@ -58,8 +61,9 @@ function demo() {
     spot = new point(width / 2, height / 2, "black"),
         c1 = new circle(width / 2 - 200, height / 2, 30),
         r1 = new rectangle(width / 2 + 200, height / 2, 75, 90),
-        car1 = new car(width / 2, height / 2 - 100, 25, 45);
-    objectsToDraw.push(spot, c1, r1);
+        car1 = new car(width / 2, height / 2 - 100, 25, 45),
+        l1 = new line(width / 2, height / 2 + 100, 400);
+    objectsToDraw.push(spot, c1, r1, l1);
     car1.speed = 0.5;
     car1.collisionBox = new rectangle(car1.position.x, car1.position.y, car1.width, car1.height);
     car1.carImg.src = getFirstAvailableColor();
@@ -99,7 +103,8 @@ document.onmousedown = event => {
     elementToMove = undefined;
     let clickPoint = new point(clickMouseX, clickMouseY);
     switch (event.button) {
-        case 0:
+        case 0: //Left Mousebutton clicked
+            menu.setAttribute("style", "display:none;");
             objectsToDraw.forEach(element => {
                 let fun = "collide_point_" + element.constructor.name;
                 if (element.constructor.name == "point") {
@@ -127,7 +132,8 @@ document.onmousedown = event => {
                 selectedElement = undefined;
             }
             break;
-        case 1:
+        case 1: //Mousewheelclick
+            menu.setAttribute("style", "display:none;");
             objectsToDraw.forEach(element => {
                 let fun = "collide_" + "point_" + element.constructor.name;
                 if (window[fun](clickPoint, element)) {
@@ -152,6 +158,27 @@ document.onmousedown = event => {
                 }
             }
             elementToMove = undefined;
+            break;
+        case 2: //Right Mousebutton clicked
+            selectedElement = undefined;
+            objectsToDraw.forEach(element => {
+                let fun = "collide_" + "point_" + element.constructor.name;
+                if (element.constructor.name == "point") {
+                    fun += "_Radius";
+                }
+                if (window[fun](clickPoint, element)) {
+                    selectedElement = element;
+                }
+            });
+            Cars.forEach(element => {
+                let fun = "collide_" + "point_" + element.collisionBox.constructor.name;
+                if (window[fun](clickPoint, element)) {
+                    selectedElement = element;
+                }
+            });
+            if (selectedElement) {
+                menu.setAttribute("style", `left: ${Math.min(clickMouseX, width - 400)}px; top: ${Math.min(clickMouseY, height - 400)}px; width: 400px; height: 400px; display:block; position: absolute; background-color: ${settings.darkMode ? "rgba(150, 150, 150, 0.3)" : "rgba(50, 50, 50, 0.3)"};`);
+            }
             break;
         default:
             break;
@@ -183,7 +210,7 @@ document.onmousemove = event => {
     oldMouseY = MouseY;
 };
 document.onmouseup = event => {
-    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button != 1) {
+    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button == 0) {
         selectedElement = elementToMove;
     }
     if (event.button != 1) {
@@ -192,7 +219,7 @@ document.onmouseup = event => {
     }
 };
 document.body.addEventListener("keydown", event => {
-    console.log(event.keyCode);
+    // console.log(event.keyCode);
     switch (event.keyCode) {
         case 87: //W
             fw1 = true;
@@ -241,6 +268,9 @@ document.body.addEventListener("keydown", event => {
             break;
         case 46: //Delete
             remove();
+            break;
+        case 74:
+            duplicate();
             break;
         case 76: //L
             document.getElementById("file-input").click();
@@ -303,7 +333,18 @@ function update() {
     for (let i = 0; i < Cars.length; i++) {
         if (window["fw" + (i + 1)] && !window["bw" + (i + 1)]) {
             let v = new vector(0, 0);
-            v.set_Length(Cars[i].speed);
+            if (window["tl" + (i + 1)] && window["tr" + (i + 1)] && Cars[i].currentBoost > 5) {
+                v.set_Length(Cars[i].speed * 5);
+                Cars[i].currentBoost -= 5;
+                Cars[i].boosting = true;
+            }
+            else {
+                v.set_Length(Cars[i].speed);
+                if (Cars[i].currentBoost < Cars[i].maxBoost) {
+                    Cars[i].currentBoost++;
+                }
+                Cars[i].boosting = false;
+            }
             v.set_Angle(Cars[i].angle + 3 * Math.PI / 2);
             Cars[i].accelerate(v);
         }
@@ -391,14 +432,40 @@ function remove() {
 }
 function duplicate() {
     if (selectedElement instanceof element) {
-        let temp = new map[selectedElement.type]();
-        temp.position = selectedElement.position;
-        temp.angle = selectedElement.angle;
-        temp.rotation = selectedElement.rotation;
-        temp.color = selectedElement.color;
-        temp.add_Position(new vector(-20, 20));
-        objectsToDraw.push(temp);
-        return temp;
+        function mapping(obj) {
+            let objNew = new map[obj.type]();
+            if (obj.type == "car") {
+                console.log(objNew);
+            }
+            Object.entries(obj).forEach((keys) => {
+                if (keys[1].type == "vector" || keys[1].type == "rectangle" || keys[1].type == "circle") {
+                    objNew[keys[0]] = mapping(keys[1]);
+                }
+                else if (keys[1] instanceof Array) {
+                    keys[1].forEach(element => {
+                        mapping(element);
+                    });
+                }
+                else {
+                    if (keys[0] == "carImg") {
+                        objNew[keys[0]] = obj.carImg.src;
+                    }
+                    objNew[keys[0]] = keys[1];
+                }
+            });
+            return objNew;
+        }
+        let temp = mapping(selectedElement);
+        temp.add_Position(new vector(20, -20));
+        if (selectedElement instanceof car) {
+            Cars.push(temp);
+        }
+        else {
+            objectsToDraw.push(temp);
+        }
+    }
+    else {
+        console.warn("Only elements can be duplicated. Maybe you have not selected an element?");
     }
 }
 function getFirstAvailableColor() {
@@ -457,13 +524,16 @@ function load() {
                     });
                 }
                 else {
+                    if (keys[0] == "carImg") {
+                        return;
+                    }
                     objNew[keys[0]] = keys[1];
                 }
             });
             return objNew;
         }
         objectsToDraw = data.objects.map((obj) => mapping(obj));
-        Cars = data.cars.map((obj) => mapping(obj));
+        Cars = data.cars.map((obj) => { let temp = mapping(obj); console.log(obj); return temp; });
         for (let giveColor of Cars) {
             giveColor.carImg.src = getFirstAvailableColor();
         }
