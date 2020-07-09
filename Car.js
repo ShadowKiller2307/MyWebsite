@@ -1,18 +1,10 @@
-const order = ["point", "circle", "line", "rectangle"];
-var canvas = document.getElementById("canvas"), [fw1, bw1, tl1, tr1, fw2, bw2, tl2, tr2, fw3, bw3, tl3, tr3] = new Array(12).fill(false);
-let context = canvas.getContext("2d"), height = window.innerHeight, width = window.innerWidth, menu = document.getElementById("menu"), fireImg = new Image(), Cars = [], objectsToDraw = [], affectedByGravity = [], elementToMove, lineEndToMove, selectedElement, clickMouseX, clickMouseY, oldMouseX = 0, oldMouseY = 0, map = {
+const order = ["point", "circle", "line", "rectangle"], map = {
     "vector": vector,
     "point": point,
     "line": line,
     "circle": circle,
     "rectangle": rectangle,
     "car": car
-};
-let settings = {
-    drawPoints: false,
-    collisionStop: false,
-    drawUpdates: true,
-    darkMode: false
 }, carColors = {
     "red": "carRed.png",
     "blue": "carBlue.png",
@@ -21,6 +13,18 @@ let settings = {
     "orange": "carOrange.png",
     "purple": "carPurple.png",
     "yellow": "carYellow.png",
+}, triggerfunctions = {
+    increaseCounter: (counter, amount = 1) => {
+    }, endGame: () => {
+    }
+};
+var canvas = document.getElementById("canvas"), [fw1, bw1, tl1, tr1, fw2, bw2, tl2, tr2, fw3, bw3, tl3, tr3] = new Array(12).fill(false);
+let context = canvas.getContext("2d"), height = window.innerHeight, width = window.innerWidth, menu = document.getElementById("menu"), fireImg = new Image(), Cars = [], objectsToDraw = [], elementToMove, lineEndToMove, selectedElement, clickMouseX, clickMouseY, oldMouseX = 0, oldMouseY = 0, settings = {
+    drawPoints: false,
+    collisionStop: false,
+    updateCollisions: true,
+    drawUpdates: true,
+    darkMode: false
 };
 canvas.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); };
 menu.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); };
@@ -29,24 +33,24 @@ canvas.height = height;
 canvas.width = width;
 //let lol = context.createPattern(carImg, "repeat");
 let car1, car2, car3;
-let c1, r1, r2, anchor, moon, spot, l1;
-demo();
+let c1, c2, r1, r2, anchor, moon, spot, l1, l2;
+testing();
 function testing() {
     Cars = [];
     objectsToDraw = [];
-    spot = new point(100, 100),
-        l1 = new line(140, 200, 200);
+    l1 = new line(300, 500, 30),
+        l2 = new line(600, 500, 400);
     settings.drawPoints = true;
-    objectsToDraw.push(spot, l1);
+    objectsToDraw.push(l1, l2);
 }
 function standard() {
     Cars = [];
+    objectsToDraw = [];
     car1 = new car(width / 2, height / 2, 25, 45);
     car1.speed = 0.5;
     car1.collisionBox = new rectangle(car1.position.x, car1.position.y, car1.width, car1.height);
     car1.carImg.src = getFirstAvailableColor();
     Cars.push(car1);
-    objectsToDraw = [];
     settings.drawPoints = false;
     spot = new point(100, 100, "black"),
         c1 = new circle(300, 500, 30),
@@ -71,11 +75,11 @@ function demo() {
 }
 function eskalation() {
     Cars = [];
+    objectsToDraw = [];
     car1 = new car(width / 2, height / 2, 25, 45);
     car1.speed = 0.5;
     car1.collisionBox = new rectangle(car1.position.x, car1.position.y, car1.width, car1.height);
     Cars.push(car1);
-    objectsToDraw = [];
     c1 = new circle(300, 500, 30),
         r1 = new rectangle(100, 70, 75, 90, undefined, undefined, 0.1, undefined, 1),
         r2 = new rectangle(600, 100, 150, 200, undefined, undefined, 0.1, undefined, 1),
@@ -218,8 +222,8 @@ document.onmouseup = event => {
         lineEndToMove = undefined;
     }
 };
-document.body.addEventListener("keydown", event => {
-    // console.log(event.keyCode);
+document.getElementsByTagName("canvas")[0].addEventListener("keydown", event => {
+    //console.log(event.keyCode);
     switch (event.keyCode) {
         case 87: //W
             fw1 = true;
@@ -272,6 +276,9 @@ document.body.addEventListener("keydown", event => {
         case 74:
             duplicate();
             break;
+        case 75:
+            save();
+            break;
         case 76: //L
             document.getElementById("file-input").click();
             break;
@@ -279,7 +286,7 @@ document.body.addEventListener("keydown", event => {
             break;
     }
 });
-document.body.addEventListener("keyup", event => {
+document.addEventListener("keyup", event => {
     switch (event.keyCode) {
         case 87: //W
             fw1 = false;
@@ -374,7 +381,9 @@ function update() {
             Cars[i].rotation = 0.03 * Math.PI / 2;
         }
     }
-    update_Collisions();
+    if (settings.updateCollisions) {
+        update_Collisions();
+    }
     //update and draw the other shapes
     for (let thing of objectsToDraw) {
         thing.update();
@@ -451,7 +460,8 @@ function duplicate() {
                 console.log(objNew);
             }
             Object.entries(obj).forEach((keys) => {
-                if (keys[1].type == "vector" || keys[1].type == "rectangle" || keys[1].type == "circle") {
+                let type = keys[1].type;
+                if (type == "vector" || type == "rectangle" || type == "circle" || type == "point") {
                     objNew[keys[0]] = mapping(keys[1]);
                 }
                 else if (keys[1] instanceof Array) {
@@ -528,7 +538,7 @@ function load() {
                 console.log(objNew);
             }
             Object.entries(obj).forEach((keys) => {
-                if (keys[1].type == "vector" || keys[1].type == "rectangle" || keys[1].type == "circle") {
+                if (keys[1].type == "vector" || keys[1].type == "rectangle" || keys[1].type == "circle" || keys[1].type == "point") {
                     objNew[keys[0]] = mapping(keys[1]);
                 }
                 else if (keys[1] instanceof Array) {

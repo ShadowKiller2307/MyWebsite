@@ -18,9 +18,16 @@ function collide_point_point_Radius(p1, p2) {
     }
     return false;
 }
-function collide_point_circle(p1, c1) {
-    if (distance_point_point(p1, new point(c1.position.x, c1.position.y)) <= c1.radius) {
+function collide_point_circle(p1, c1, drawPoints) {
+    let center = new point(c1.position.x, c1.position.y);
+    if (distance_point_point(p1, center) <= c1.radius) {
         return true;
+    }
+    if (drawPoints) {
+        let direction = fromVectorToVector(p1.position, c1.position);
+        direction.set_Length(-c1.radius);
+        let pointOnRadius = center.position.add_Return(direction);
+        new point(pointOnRadius.x, pointOnRadius.y).draw("blue");
     }
     return false;
 }
@@ -32,7 +39,7 @@ function collide_point_line(p1, l1, drawPoints) {
     t = Math.max(0, Math.min(1, t));
     let shortestPoint = new point(l1.pos1.position.x + t * (l1.pos2.position.x - l1.pos1.position.x), l1.pos1.position.y + t * (l1.pos2.position.y - l1.pos1.position.y));
     if (drawPoints) {
-        //shortestPoint.draw("blue");
+        shortestPoint.draw("blue");
     }
     return Math.sqrt(distance_position_position(p1.position, shortestPoint.position)) < buffer;
 }
@@ -62,7 +69,7 @@ function collide_point_rectangle(p1, r1, drawPoints) {
         }
         let shortestPoint = new point(compareX, compareY);
         shortestPoint = rotate_e1_around_Pos_e2_Return(shortestPoint, r1, r1.angle);
-        //shortestPoint.draw("blue");
+        shortestPoint.draw("blue");
     }
     if (p1X >= r1.position.x - r1.width / 2 && //right of the left edge
         p1X <= r1.position.x + r1.width / 2 && //left of the right edge
@@ -73,14 +80,44 @@ function collide_point_rectangle(p1, r1, drawPoints) {
     }
     return false;
 }
-function collide_circle_circle(c1, c2) {
+function collide_circle_circle(c1, c2, drawPoints) {
     let dis = distance_position_position(c1.position, c2.position);
     if (dis <= c1.radius + c2.radius) {
         return true;
     }
+    if (drawPoints) {
+        let center1 = new point(c1.position.x, c1.position.y);
+        let center2 = new point(c2.position.x, c2.position.y);
+        let direction = fromVectorToVector(c1.position, c2.position);
+        direction.set_Length(c1.radius);
+        let pointOnRadius = center1.position.add_Return(direction);
+        new point(pointOnRadius.x, pointOnRadius.y).draw("blue");
+        direction.set_Length(-c2.radius);
+        pointOnRadius = center2.position.add_Return(direction);
+        new point(pointOnRadius.x, pointOnRadius.y).draw("blue");
+    }
     return false;
 }
-function collide_circle_line() {
+function collide_circle_line(c1, l1, drawPoints) {
+    let buffer = c1.radius;
+    if (l1.length == 0)
+        return distance_point_point(new point(c1.position.x, c1.position.y), l1.pos1) < buffer;
+    var t = ((c1.position.x - l1.pos1.position.x) * (l1.pos2.position.x - l1.pos1.position.x) + (c1.position.y - l1.pos1.position.y) * (l1.pos2.position.y - l1.pos1.position.y)) / Math.pow(l1.length, 2);
+    t = Math.max(0, Math.min(1, t));
+    let shortestPoint = new point(l1.pos1.position.x + t * (l1.pos2.position.x - l1.pos1.position.x), l1.pos1.position.y + t * (l1.pos2.position.y - l1.pos1.position.y));
+    if (distance_position_position(c1.position, shortestPoint.position) < buffer) {
+        return true;
+    }
+    ;
+    if (drawPoints) {
+        shortestPoint.draw("blue");
+        let center = new point(c1.position.x, c1.position.y);
+        let direction = fromVectorToVector(c1.position, shortestPoint.position);
+        direction.set_Length(c1.radius);
+        let pointOnRadius = center.position.add_Return(direction);
+        new point(pointOnRadius.x, pointOnRadius.y).draw("blue");
+    }
+    return false;
 }
 function collide_circle_rectangle(c1, r1, drawPoints) {
     let angle = r1.angle, c1X = Math.cos(-angle) * (c1.position.x - r1.position.x) - Math.sin(-angle) * (c1.position.y - r1.position.y) + r1.position.x, c1Y = Math.sin(-angle) * (c1.position.x - r1.position.x) + Math.cos(-angle) * (c1.position.y - r1.position.y) + r1.position.y, compareX, compareY;
@@ -105,16 +142,34 @@ function collide_circle_rectangle(c1, r1, drawPoints) {
     let shortestPoint = new point(compareX, compareY);
     shortestPoint = rotate_e1_around_Pos_e2_Return(shortestPoint, r1, r1.angle);
     if (drawPoints) {
-        //shortestPoint.draw("blue");
+        shortestPoint.draw("blue");
+        let center = new point(c1.position.x, c1.position.y);
+        let direction = fromVectorToVector(c1.position, shortestPoint.position);
+        direction.set_Length(c1.radius);
+        let pointOnRadius = center.position.add_Return(direction);
+        new point(pointOnRadius.x, pointOnRadius.y).draw("blue");
     }
     if (distance_position_position(new vector(c1.position.x, c1.position.y), shortestPoint.position) <= c1.radius) {
         return true;
     }
     return false;
 }
-function collide_line_line() {
+function collide_line_line(l1, l2, drawPoints) {
+    let x1 = l1.pos1.position.x, x2 = l1.pos2.position.x, x3 = l2.pos1.position.x, x4 = l2.pos2.position.x, y1 = l1.pos1.position.y, y2 = l1.pos2.position.y, y3 = l2.pos1.position.y, y4 = l2.pos2.position.y, uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)), uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+    if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+        return true;
+    }
+    if (drawPoints) {
+        new point(x1 + (uA * (x2 - x1)), y1 + (uA * (y2 - y1))).draw("blue");
+    }
+    return false;
 }
-function collide_line_rectangle() {
+function collide_line_rectangle(l1, r1, drawPoints) {
+    if (collide_line_line(l1, new line()) ||
+        collide_line_line() ||
+        collide_line_line() ||
+        collide_line_line()) {
+    }
 }
 function collide_rectangle_rectangle(r1, r2, drawPoints) {
     if (collide_point_rectangle(rotate_e1_around_Pos_e2_Return(rotate_e1_around_Pos_e2_Return(new point(r2.position.x + r2.width / 2, r2.position.y + r2.height / 2), r2, -r2.angle), r1, -r1.angle), r1, drawPoints) ||

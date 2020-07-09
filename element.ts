@@ -76,6 +76,10 @@ class element {
         return this.position;
     }
 
+    trigger(obj) {
+
+    }
+
     draw(color?: string) {
     }
 }
