@@ -55,7 +55,7 @@ canvas.width = width;
 let car1: car, car2: car, car3: car;
 let c1: circle, c2: circle, r1: rectangle, r2: rectangle, anchor: point, moon: rectangle, spot: point, l1: line, l2: line;
 
-testing();
+demo();
 
 function testing() {
     Cars = [];
@@ -253,7 +253,7 @@ document.onmouseup = event => {
     }
 }
 
-document.getElementsByTagName("canvas")[0].addEventListener("keydown", event => {
+document.body.addEventListener("keydown", event => {
     //console.log(event.keyCode);
     switch (event.keyCode) {
         case 87: //W
@@ -318,7 +318,7 @@ document.getElementsByTagName("canvas")[0].addEventListener("keydown", event => 
     }
 })
 
-document.addEventListener("keyup", event => {
+document.body.addEventListener("keyup", event => {
     switch (event.keyCode) {
         case 87: //W
             fw1 = false;
@@ -373,43 +373,45 @@ function update() {
     }
 
     for (let i = 0; i < Cars.length; i++) {
+        let currentCar = Cars[i];
         if (window["fw" + (i + 1)] && !window["bw" + (i + 1)]) {
             let v = new vector(0, 0);
             if (window["tl" + (i + 1)] && window["tr" + (i + 1)]) { //trying to boost
-                if (Cars[i].currentBoost > 5) { //boosting
-                    v.set_Length(Cars[i].speed * 2.5);
-                    Cars[i].currentBoost -= 5;
-                    Cars[i].boosting = true;
+                if (currentCar.currentBoost > 5) { //boosting
+                    v.set_Length(currentCar.speed * 2.5);
+                    currentCar.currentBoost -= 5;
+                    currentCar.boosting = true;
                 } else { //not able to boost
-                    v.set_Length(Cars[i].speed);
-                    Cars[i].boosting = false;
+                    v.set_Length(currentCar.speed);
+                    currentCar.boosting = false;
                 }
             } else { //not trying boosting
-                v.set_Length(Cars[i].speed);
-                if (Cars[i].currentBoost < Cars[i].maxBoost) {
-                    Cars[i].currentBoost++;
+                v.set_Length(currentCar.speed);
+                currentCar.boosting = false;
+                if (currentCar.currentBoost < currentCar.maxBoost) {
+                    currentCar.currentBoost++;
+
                 }
-                Cars[i].boosting = false;
             }
-            v.set_Angle(Cars[i].angle + 3 * Math.PI / 2);
-            Cars[i].accelerate(v);
+            v.set_Angle(currentCar.angle + 3 * Math.PI / 2);
+            currentCar.accelerate(v);
         } else if (!window["fw" + (i + 1)] && window["bw" + (i + 1)]) {
             let v = new vector(0, 0);
             v.set_Length(0.1);
-            v.set_Angle(Cars[i].angle + Math.PI / 2);
-            Cars[i].accelerate(v);
-            Cars[i].boosting = false;
+            v.set_Angle(currentCar.angle + Math.PI / 2);
+            currentCar.accelerate(v);
+            currentCar.boosting = false;
         } else {
-            Cars[i].boosting = false;
-            if (Cars[i].currentBoost < Cars[i].maxBoost) {
-                Cars[i].currentBoost++;
+            currentCar.boosting = false;
+            if (currentCar.currentBoost < currentCar.maxBoost) {
+                currentCar.currentBoost++;
             }
         }
         if (window["tl" + (i + 1)] && !window["tr" + (i + 1)]) {
-            Cars[i].rotation = -0.03 * Math.PI / 2;
+            currentCar.rotation = -0.03 * Math.PI / 2;
         }
         if (!window["tl" + (i + 1)] && window["tr" + (i + 1)]) {
-            Cars[i].rotation = 0.03 * Math.PI / 2;
+            currentCar.rotation = 0.03 * Math.PI / 2;
         }
     }
     if (settings.updateCollisions) {

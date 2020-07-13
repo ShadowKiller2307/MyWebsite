@@ -165,11 +165,12 @@ function collide_line_line(l1, l2, drawPoints) {
     return false;
 }
 function collide_line_rectangle(l1, r1, drawPoints) {
-    if (collide_line_line(l1, new line()) ||
+    /*if (collide_line_line(l1, new line()) ||
         collide_line_line() ||
         collide_line_line() ||
         collide_line_line()) {
-    }
+
+    }*/
 }
 function collide_rectangle_rectangle(r1, r2, drawPoints) {
     if (collide_point_rectangle(rotate_e1_around_Pos_e2_Return(rotate_e1_around_Pos_e2_Return(new point(r2.position.x + r2.width / 2, r2.position.y + r2.height / 2), r2, -r2.angle), r1, -r1.angle), r1, drawPoints) ||

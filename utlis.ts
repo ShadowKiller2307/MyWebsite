@@ -189,12 +189,12 @@ function collide_line_line(l1: line, l2: line, drawPoints?: boolean) {
 }
 
 function collide_line_rectangle(l1: line, r1: rectangle, drawPoints?: boolean) {
-    if (collide_line_line(l1, new line()) ||
+    /*if (collide_line_line(l1, new line()) ||
         collide_line_line() ||
         collide_line_line() ||
         collide_line_line()) {
 
-    }
+    }*/
 }
 
 function collide_rectangle_rectangle(r1: rectangle, r2: rectangle, drawPoints?: boolean): boolean {
