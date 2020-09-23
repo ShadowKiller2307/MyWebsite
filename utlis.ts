@@ -108,7 +108,7 @@ function collide_circle_circle(c1: circle, c2: circle, drawPoints?: boolean): bo
     return false;
 }
 
-function collide_circle_line(c1: circle, l1: line, drawPoints?: boolean) {
+function collide_circle_line(c1: circle, l1: line, drawPoints?: boolean): boolean {
     let buffer = c1.radius;
     if (l1.length == 0) return distance_point_point(new point(c1.position.x, c1.position.y), l1.pos1) < buffer;
     var t = ((c1.position.x - l1.pos1.position.x) * (l1.pos2.position.x - l1.pos1.position.x) + (c1.position.y - l1.pos1.position.y) * (l1.pos2.position.y - l1.pos1.position.y)) / Math.pow(l1.length, 2);
@@ -168,7 +168,7 @@ function collide_circle_rectangle(c1: circle, r1: rectangle, drawPoints?: boolea
     return false;
 }
 
-function collide_line_line(l1: line, l2: line, drawPoints?: boolean) {
+function collide_line_line(l1: line, l2: line, drawPoints?: boolean): boolean {
     let x1 = l1.pos1.position.x,
         x2 = l1.pos2.position.x,
         x3 = l2.pos1.position.x,
