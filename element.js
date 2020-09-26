@@ -112,7 +112,7 @@ class car extends element {
             this.position.y = height;
         }
     }
-    draw() {
+    draw(frameColorIfSelected) {
         if (this.collisionBox.collision && settings.collisionStop) {
             this.velocity = new vector(0, 0);
         }

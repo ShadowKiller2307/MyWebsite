@@ -143,7 +143,7 @@ class car extends element {
         }
     }
 
-    draw() {
+    draw(frameColorIfSelected: string) {
         if (this.collisionBox.collision && settings.collisionStop) {
             this.velocity = new vector(0, 0);
         }

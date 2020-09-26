@@ -15,7 +15,7 @@ const order = ["point", "circle", "line", "rectangle"],
         "purple": "carPurple.png",
         "yellow": "carYellow.png",
     }, triggerfunctions = {
-        increaseCounter: (counter, amount = 1) => {
+        increaseCounter: (counter: any, amount = 1) => {
 
         }, endGame: () => {
 
@@ -130,8 +130,17 @@ function addCar() {
     let carNew = new car(width / 2, height / 2, 25, 45);
     carNew.speed = 0.5;
     carNew.collisionBox = new rectangle(carNew.position.x, carNew.position.y, carNew.width, carNew.height);
-    setColorToFirstAvailable(car1);
+    setColorToFirstAvailable(carNew);
     Cars.push(carNew);
+}
+
+function clickedInsideMenu(): boolean {
+    let posX = parseInt(menu.style.left),
+        posY = parseInt(menu.style.top);
+    if (clickMouseX > posX && clickMouseX < posX + menu.clientWidth && clickMouseY > posY && clickMouseY < posY + menu.clientHeight) {
+        return true;
+    }
+    return false;
 }
 
 document.onmousedown = event => {
@@ -141,14 +150,6 @@ document.onmousedown = event => {
     oldMouseY = event.clientY;
     elementToMove = undefined;
     let clickPoint = new point(clickMouseX, clickMouseY);
-    function clickedInsideMenu(): boolean {
-        let pos1 = parseInt(menu.style.left),
-            pos2 = parseInt(menu.style.top);
-        if (clickMouseX > pos1 && clickMouseX < pos1 + 400 && clickMouseY > pos2 && clickMouseY < pos2 + 400) {
-            return true;
-        }
-        return false;
-    }
     switch (event.button) {
         case 0: //Left Mousebutton clicked
             if (clickedInsideMenu()) {
@@ -227,8 +228,8 @@ document.onmousedown = event => {
                     selectedElement = element;
                 }
             });
-            if (selectedElement) {
-                menu.setAttribute("style", `left: ${Math.min(clickMouseX, width - 400)}px; top: ${Math.min(clickMouseY, height - 400)}px; width: 400px; height: 400px; display:block; position: absolute; background-color: ${settings.darkMode ? "rgba(150, 150, 150, 0.8)" : "rgba(50, 50, 50, 0.8)"};`);
+            if (selectedElement) { //${Math.min(clickMouseX, width - 400)}px     ${Math.min(clickMouseY, height - 400)}px
+                menu.setAttribute("style", `width: auto; height: auto; left: 0px; top: 0px; display:inline-block; position: absolute; background-color: ${settings.darkMode ? "rgba(150, 150, 150, 0.8)" : "rgba(50, 50, 50, 0.8)"};`);
                 while (menu.firstChild) {
                     menu.removeChild(menu.lastChild);
                 }
@@ -239,37 +240,69 @@ document.onmousedown = event => {
                 centering.appendChild(title);
                 menu.appendChild(centering);
                 let label: HTMLElement;
-                let value;
-                (Object as any).entries(selectedElement).forEach(property => {
-                    switch (property[1].constructor.name) {
-                        case "Number":
-                            label = document.createElement("p");
-                            label.style.marginLeft = "16px";
-                            label.innerHTML = property[0];
-                            label.setAttribute("style", "display:inline-block; margin-left: 16px; color:white;");
-                            value = document.createElement("input");
-                            value.value = property[1];
+                let value: HTMLInputElement;
+                function setValueString() {
+                    selectedElement[(((this as HTMLElement).previousSibling) as HTMLParagraphElement).innerHTML] = this.value as string;
+                };
+                function setValueNumber() {
+                    selectedElement[(((this as HTMLElement).previousSibling) as HTMLParagraphElement).innerHTML] = parseFloat(this.value);
+                };
+                function setValueVector() {
+                    if ((this as HTMLElement).previousSibling instanceof HTMLParagraphElement) {
+                        selectedElement[(((this as HTMLElement).previousSibling) as HTMLParagraphElement).innerHTML].x = parseFloat(this.value);
+                    } else {
+                        selectedElement[(((this as HTMLElement).previousSibling.previousSibling) as HTMLParagraphElement).innerHTML].y = parseFloat(this.value);
+                    }
+                };
+                (Object as any).entries(selectedElement).forEach((property: string[]) => {
+                    if (property[0] != "type") {
+                        switch (property[1].constructor.name) {
+                            case "Number": //TODO handeling of "angle" and "length" of lines
+                                label = document.createElement("p");
+                                label.style.marginLeft = "16px";
+                                label.innerHTML = property[0];
+                                label.setAttribute("style", "display:inline-block; margin: 16px; color:white;");
+                                value = document.createElement("input");
+                                value.value = property[1];
+                                value.onchange = setValueNumber;
 
-                            menu.appendChild(label);
-                            menu.appendChild(value);
-                            menu.appendChild(document.createElement("br"));
-                            break;
-                        case "String":
-                            label = document.createElement("p");
-                            label.style.marginLeft = "16px";
-                            label.innerHTML = property[0];
-                            label.setAttribute("style", "display:inline-block; margin-left: 16px; color:white;");
-                            value = document.createElement("input");
-                            value.value = property[1];
+                                menu.appendChild(label);
+                                menu.appendChild(value);
+                                menu.appendChild(document.createElement("br"));
+                                break;
+                            case "String":
+                                label = document.createElement("p");
+                                label.style.marginLeft = "16px";
+                                label.innerHTML = property[0];
+                                label.setAttribute("style", "display:inline-block; margin: 16px; color:white;");
+                                value = document.createElement("input");
+                                value.value = property[1];
+                                value.onchange = setValueString;
 
-                            menu.appendChild(label);
-                            menu.appendChild(value);
-                            menu.appendChild(document.createElement("br"));
-                            break;
-                        case "vector":
-                            // console.log(property[0] + ": ");
-                            // console.log(property[1]);
-                            break;
+                                menu.appendChild(label);
+                                menu.appendChild(value);
+                                menu.appendChild(document.createElement("br"));
+                                break;
+                            case "vector":
+                                label = document.createElement("p");
+                                label.style.marginLeft = "16px";
+                                label.innerHTML = property[0];
+                                label.setAttribute("style", "display:inline-block; margin: 16px; color:white;");
+                                value = document.createElement("input");
+                                value.setAttribute("style", "margin: 16px;");
+                                value.value = ((property[1] as unknown as vector).x).toString();
+                                value.onchange = setValueVector;
+
+                                menu.appendChild(label);
+                                menu.appendChild(value);
+                                value = document.createElement("input");
+                                value.setAttribute("style", "margin: 16px;");
+                                value.value = ((property[1] as unknown as vector).y).toString();
+                                value.onchange = setValueVector;
+                                menu.appendChild(value);
+                                menu.appendChild(document.createElement("br"));
+                                break;
+                        }
                     }
                 });
             } else {
@@ -305,12 +338,12 @@ document.onmousemove = event => {
 }
 
 document.onmouseup = event => {
-    let pos1 = parseInt(menu.style.left),
-        pos2 = parseInt(menu.style.top);
-    if (clickMouseX > pos1 && clickMouseX < pos1 + parseInt(menu.style.width) && clickMouseY > pos2 && clickMouseY < pos2 + parseInt(menu.style.height)) {
+    let posX = parseInt(menu.style.left),
+        posY = parseInt(menu.style.top);
+    if (clickMouseX > posX && clickMouseX < posX + parseInt(menu.style.width) && clickMouseY > posY && clickMouseY < posY + parseInt(menu.style.height)) {
         return;
     }
-    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button == 0) {
+    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button == 0 && !clickedInsideMenu()) {
         selectedElement = elementToMove;
     }
     if (event.button != 1) {
@@ -321,6 +354,9 @@ document.onmouseup = event => {
 
 document.body.addEventListener("keydown", event => {
     // console.log(event.code);
+    if (menu.style.display != "none") { //don't do anything because the menu is open
+        return;
+    }
     switch (event.code) {
         case "KeyW":
             fw1 = true;
@@ -509,6 +545,9 @@ function update() {
     //update and draw the car(s)
     Cars.forEach((car) => {
         car.update();
+        if (car == selectedElement) {
+            car.draw()
+        }
         car.draw();
     });
     if (settings.isGameRunning) {
@@ -610,9 +649,10 @@ function toggle(setToToggle: string) {
 function setColorToFirstAvailable(unpainted: car) {
     for (let color in carColors) {
         let available = true;
-        for (let testCar of Cars) {
-            if (testCar.carImg.src.indexOf(carColors[color]) >= 0) {
+        for (let observedCar of Cars) {
+            if (observedCar.carImg.src.indexOf(carColors[color]) >= 0) {
                 available = false;
+                break;
             }
         }
         if (available) {
@@ -643,7 +683,7 @@ function load() {
     let file = (document.getElementById("file-input") as HTMLInputElement).files[0];
     var reader = new FileReader();
     reader.onloadend = () => {
-        let data;
+        let data: { objects: element[]; cars: element[]; };
         try {
             data = JSON.parse(reader.result as string);
         } catch (err) {
@@ -651,7 +691,7 @@ function load() {
             alert("E R R O R : Please select a valid .txt-file");
             return;
         }
-        function mapping(obj) {
+        function mapping(obj: element) {
             let objNew = new mapClasses[obj.type]();
             if (obj.type == "car") {
                 console.log(objNew);

@@ -15,7 +15,8 @@ const order = ["point", "circle", "line", "rectangle"], mapClasses = {
     "yellow": "carYellow.png",
 }, triggerfunctions = {
     increaseCounter: (counter, amount = 1) => {
-    }, endGame: () => {
+    },
+    endGame: () => {
     }
 };
 var canvas = document.getElementById("canvas"), [fw1, bw1, tl1, tr1, fw2, bw2, tl2, tr2, fw3, bw3, tl3, tr3] = new Array(12).fill(false);
@@ -99,8 +100,15 @@ function addCar() {
     let carNew = new car(width / 2, height / 2, 25, 45);
     carNew.speed = 0.5;
     carNew.collisionBox = new rectangle(carNew.position.x, carNew.position.y, carNew.width, carNew.height);
-    setColorToFirstAvailable(car1);
+    setColorToFirstAvailable(carNew);
     Cars.push(carNew);
+}
+function clickedInsideMenu() {
+    let posX = parseInt(menu.style.left), posY = parseInt(menu.style.top);
+    if (clickMouseX > posX && clickMouseX < posX + menu.clientWidth && clickMouseY > posY && clickMouseY < posY + menu.clientHeight) {
+        return true;
+    }
+    return false;
 }
 document.onmousedown = event => {
     clickMouseX = event.clientX;
@@ -109,13 +117,6 @@ document.onmousedown = event => {
     oldMouseY = event.clientY;
     elementToMove = undefined;
     let clickPoint = new point(clickMouseX, clickMouseY);
-    function clickedInsideMenu() {
-        let pos1 = parseInt(menu.style.left), pos2 = parseInt(menu.style.top);
-        if (clickMouseX > pos1 && clickMouseX < pos1 + 400 && clickMouseY > pos2 && clickMouseY < pos2 + 400) {
-            return true;
-        }
-        return false;
-    }
     switch (event.button) {
         case 0: //Left Mousebutton clicked
             if (clickedInsideMenu()) {
@@ -195,8 +196,8 @@ document.onmousedown = event => {
                     selectedElement = element;
                 }
             });
-            if (selectedElement) {
-                menu.setAttribute("style", `left: ${Math.min(clickMouseX, width - 400)}px; top: ${Math.min(clickMouseY, height - 400)}px; width: 400px; height: 400px; display:block; position: absolute; background-color: ${settings.darkMode ? "rgba(150, 150, 150, 0.8)" : "rgba(50, 50, 50, 0.8)"};`);
+            if (selectedElement) { //${Math.min(clickMouseX, width - 400)}px     ${Math.min(clickMouseY, height - 400)}px
+                menu.setAttribute("style", `width: auto; height: auto; left: 0px; top: 0px; display:inline-block; position: absolute; background-color: ${settings.darkMode ? "rgba(150, 150, 150, 0.8)" : "rgba(50, 50, 50, 0.8)"};`);
                 while (menu.firstChild) {
                     menu.removeChild(menu.lastChild);
                 }
@@ -208,34 +209,69 @@ document.onmousedown = event => {
                 menu.appendChild(centering);
                 let label;
                 let value;
-                Object.entries(selectedElement).forEach(property => {
-                    switch (property[1].constructor.name) {
-                        case "Number":
-                            label = document.createElement("p");
-                            label.style.marginLeft = "16px";
-                            label.innerHTML = property[0];
-                            label.setAttribute("style", "display:inline-block; margin-left: 16px; color:white;");
-                            value = document.createElement("input");
-                            value.value = property[1];
-                            menu.appendChild(label);
-                            menu.appendChild(value);
-                            menu.appendChild(document.createElement("br"));
-                            break;
-                        case "String":
-                            label = document.createElement("p");
-                            label.style.marginLeft = "16px";
-                            label.innerHTML = property[0];
-                            label.setAttribute("style", "display:inline-block; margin-left: 16px; color:white;");
-                            value = document.createElement("input");
-                            value.value = property[1];
-                            menu.appendChild(label);
-                            menu.appendChild(value);
-                            menu.appendChild(document.createElement("br"));
-                            break;
-                        case "vector":
-                            // console.log(property[0] + ": ");
-                            // console.log(property[1]);
-                            break;
+                function setValueString() {
+                    selectedElement[(this.previousSibling).innerHTML] = this.value;
+                }
+                ;
+                function setValueNumber() {
+                    selectedElement[(this.previousSibling).innerHTML] = parseFloat(this.value);
+                }
+                ;
+                function setValueVector() {
+                    if (this.previousSibling instanceof HTMLParagraphElement) {
+                        selectedElement[(this.previousSibling).innerHTML].x = parseFloat(this.value);
+                    }
+                    else {
+                        selectedElement[(this.previousSibling.previousSibling).innerHTML].y = parseFloat(this.value);
+                    }
+                }
+                ;
+                Object.entries(selectedElement).forEach((property) => {
+                    if (property[0] != "type") {
+                        switch (property[1].constructor.name) {
+                            case "Number": //TODO handeling of "angle" and "length" of lines
+                                label = document.createElement("p");
+                                label.style.marginLeft = "16px";
+                                label.innerHTML = property[0];
+                                label.setAttribute("style", "display:inline-block; margin: 16px; color:white;");
+                                value = document.createElement("input");
+                                value.value = property[1];
+                                value.onchange = setValueNumber;
+                                menu.appendChild(label);
+                                menu.appendChild(value);
+                                menu.appendChild(document.createElement("br"));
+                                break;
+                            case "String":
+                                label = document.createElement("p");
+                                label.style.marginLeft = "16px";
+                                label.innerHTML = property[0];
+                                label.setAttribute("style", "display:inline-block; margin: 16px; color:white;");
+                                value = document.createElement("input");
+                                value.value = property[1];
+                                value.onchange = setValueString;
+                                menu.appendChild(label);
+                                menu.appendChild(value);
+                                menu.appendChild(document.createElement("br"));
+                                break;
+                            case "vector":
+                                label = document.createElement("p");
+                                label.style.marginLeft = "16px";
+                                label.innerHTML = property[0];
+                                label.setAttribute("style", "display:inline-block; margin: 16px; color:white;");
+                                value = document.createElement("input");
+                                value.setAttribute("style", "margin: 16px;");
+                                value.value = (property[1].x).toString();
+                                value.onchange = setValueVector;
+                                menu.appendChild(label);
+                                menu.appendChild(value);
+                                value = document.createElement("input");
+                                value.setAttribute("style", "margin: 16px;");
+                                value.value = (property[1].y).toString();
+                                value.onchange = setValueVector;
+                                menu.appendChild(value);
+                                menu.appendChild(document.createElement("br"));
+                                break;
+                        }
                     }
                 });
             }
@@ -273,11 +309,11 @@ document.onmousemove = event => {
     oldMouseY = MouseY;
 };
 document.onmouseup = event => {
-    let pos1 = parseInt(menu.style.left), pos2 = parseInt(menu.style.top);
-    if (clickMouseX > pos1 && clickMouseX < pos1 + parseInt(menu.style.width) && clickMouseY > pos2 && clickMouseY < pos2 + parseInt(menu.style.height)) {
+    let posX = parseInt(menu.style.left), posY = parseInt(menu.style.top);
+    if (clickMouseX > posX && clickMouseX < posX + parseInt(menu.style.width) && clickMouseY > posY && clickMouseY < posY + parseInt(menu.style.height)) {
         return;
     }
-    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button == 0) {
+    if (clickMouseX == oldMouseX && clickMouseY == oldMouseY && event.button == 0 && !clickedInsideMenu()) {
         selectedElement = elementToMove;
     }
     if (event.button != 1) {
@@ -287,6 +323,9 @@ document.onmouseup = event => {
 };
 document.body.addEventListener("keydown", event => {
     // console.log(event.code);
+    if (menu.style.display != "none") { //don't do anything because the menu is open
+        return;
+    }
     switch (event.code) {
         case "KeyW":
             fw1 = true;
@@ -477,6 +516,9 @@ function update() {
     //update and draw the car(s)
     Cars.forEach((car) => {
         car.update();
+        if (car == selectedElement) {
+            car.draw();
+        }
         car.draw();
     });
     if (settings.isGameRunning) {
@@ -576,9 +618,10 @@ function toggle(setToToggle) {
 function setColorToFirstAvailable(unpainted) {
     for (let color in carColors) {
         let available = true;
-        for (let testCar of Cars) {
-            if (testCar.carImg.src.indexOf(carColors[color]) >= 0) {
+        for (let observedCar of Cars) {
+            if (observedCar.carImg.src.indexOf(carColors[color]) >= 0) {
                 available = false;
+                break;
             }
         }
         if (available) {
